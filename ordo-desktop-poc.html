@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordo Desktop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f0f0f0;
+            --bg-tertiary: #e0e0e0;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --border-color: #000000;
+            --shadow: rgba(0, 0, 0, 0.2);
+            --highlight: #cccccc;
+        }
+
+        body {
+            font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
+            overflow: hidden;
+            height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Desktop */
+        .desktop {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .desktop-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Barre des tâches */
+        .taskbar {
+            height: 40px;
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            gap: 10px;
+            z-index: 1000;
+            box-shadow: 0 -2px 4px var(--shadow);
+        }
+
+        .start-button {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .start-button:hover {
+            background: var(--highlight);
+            box-shadow: 2px 2px 0 var(--shadow);
+        }
+
+        .start-button:active,
+        .start-button.active {
+            background: var(--bg-tertiary);
+            box-shadow: inset 2px 2px 0 var(--shadow);
+        }
+
+        .taskbar-icons {
+            display: flex;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .taskbar-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .taskbar-icon:hover {
+            background: var(--highlight);
+            transform: translateY(-2px);
+            box-shadow: 3px 3px 0 var(--shadow);
+        }
+
+        /* Menu démarré */
+        .start-menu {
+            position: absolute;
+            bottom: 45px;
+            left: 10px;
+            width: 280px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            box-shadow: 4px 4px 0 var(--shadow);
+            display: none;
+            animation: slideIn 0.2s ease-out;
+        }
+
+        .start-menu.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .start-menu-header {
+            background: var(--border-color);
+            color: var(--bg-primary);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .start-menu-items {
+            background: var(--bg-primary);
+        }
+
+        .start-menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--bg-secondary);
+        }
+
+        .start-menu-item:hover {
+            background: var(--highlight);
+        }
+
+        .start-menu-item-icon {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Fenêtres applications */
+        .window {
+            position: absolute;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            box-shadow: 4px 4px 0 var(--shadow);
+            display: none;
+            flex-direction: column;
+            min-width: 400px;
+            min-height: 300px;
+            resize: both;
+            overflow: auto;
+            z-index: 1;
+        }
+
+        .window.focused {
+            z-index: 100;
+        }
+
+        .window.active {
+            display: flex;
+            animation: windowOpen 0.2s ease-out;
+        }
+
+        @keyframes windowOpen {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .window-header {
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--border-color);
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            user-select: none;
+        }
+
+        .window-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .window-control {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .window-control.close:hover {
+            background: var(--border-color);
+        }
+
+        .window-content {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+            background: var(--bg-primary);
+        }
+
+        /* App To-Do */
+        .todo-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .todo-input {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid var(--border-color);
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+        }
+
+        .todo-input:focus {
+            outline: none;
+            background: var(--bg-secondary);
+        }
+
+        .todo-btn {
+            padding: 8px 16px;
+            background: var(--border-color);
+            color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .todo-btn:hover {
+            background: var(--bg-primary);
+            color: var(--border-color);
+            box-shadow: 2px 2px 0 var(--shadow);
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid var(--bg-secondary);
+            margin-bottom: 5px;
+            background: var(--bg-primary);
+        }
+
+        .todo-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .todo-item.completed {
+            opacity: 0.5;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+        }
+
+        .todo-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .todo-delete {
+            background: var(--border-color);
+            color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.2s;
+        }
+
+        .todo-delete:hover {
+            background: var(--bg-primary);
+            color: var(--border-color);
+        }
+
+        /* App Timer */
+        .timer-display {
+            text-align: center;
+            font-size: 64px;
+            font-weight: bold;
+            margin: 40px 0;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 8px;
+            border: 3px solid var(--border-color);
+            padding: 30px;
+            background: var(--bg-secondary);
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .timer-btn {
+            padding: 12px 24px;
+            font-size: 14px;
+            background: var(--border-color);
+            color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .timer-btn:hover {
+            background: var(--bg-primary);
+            color: var(--border-color);
+            box-shadow: 3px 3px 0 var(--shadow);
+        }
+
+        .timer-complete .timer-display {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { 
+                background: var(--bg-secondary);
+                border-color: var(--border-color);
+            }
+            50% { 
+                background: var(--border-color);
+                color: var(--bg-primary);
+            }
+        }
+
+        /* App Éditeur */
+        .editor-textarea {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            border: 2px solid var(--border-color);
+            padding: 15px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            background: var(--bg-primary);
+            line-height: 1.6;
+        }
+
+        .editor-textarea:focus {
+            outline: none;
+            background: var(--bg-secondary);
+        }
+
+        .editor-status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+            padding: 5px;
+            border-top: 1px solid var(--bg-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .window {
+                min-width: 90%;
+                left: 5% !important;
+                top: 5% !important;
+            }
+
+            .start-menu {
+                width: 220px;
+            }
+
+            .timer-display {
+                font-size: 48px;
+                letter-spacing: 4px;
+                padding: 20px;
+            }
+
+            .taskbar-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+        }
+
+        /* Scroll indicator pour desktop */
+        .desktop-empty-state {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0.3;
+            pointer-events: none;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <div class="desktop-area" id="desktopArea">
+            <div class="desktop-empty-state">
+                [ORDO DESKTOP v1.0]<br>
+                └─ Cliquez sur Démarrer pour lancer une application
+            </div>
+        </div>
+        
+        <!-- Barre des tâches -->
+        <div class="taskbar">
+            <button class="start-button" id="startBtn">[DÉMARRER]</button>
+            <div class="taskbar-icons">
+                <div class="taskbar-icon" data-app="todo" title="To-Do">📝</div>
+                <div class="taskbar-icon" data-app="timer" title="Timer">⏱️</div>
+                <div class="taskbar-icon" data-app="editor" title="Éditeur">📄</div>
+            </div>
+        </div>
+
+        <!-- Menu démarré -->
+        <div class="start-menu" id="startMenu">
+            <div class="start-menu-header">[MENU ORDO]</div>
+            <div class="start-menu-items">
+                <div class="start-menu-item" data-app="todo">
+                    <span class="start-menu-item-icon">📝</span>
+                    <span>Gestionnaire de tâches</span>
+                </div>
+                <div class="start-menu-item" data-app="timer">
+                    <span class="start-menu-item-icon">⏱️</span>
+                    <span>Timer Pomodoro</span>
+                </div>
+                <div class="start-menu-item" data-app="editor">
+                    <span class="start-menu-item-icon">📄</span>
+                    <span>Éditeur de texte</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fenêtre To-Do -->
+        <div class="window" id="todoWindow" style="left: 50px; top: 50px; width: 500px;">
+            <div class="window-header">
+                <span class="window-title">[TODO.EXE] Gestionnaire de tâches</span>
+                <div class="window-controls">
+                    <div class="window-control close" data-window="todo"></div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="todo-input-group">
+                    <input type="text" class="todo-input" id="todoInput" placeholder="Nouvelle tâche...">
+                    <button class="todo-btn" id="todoAddBtn">[+]</button>
+                </div>
+                <ul class="todo-list" id="todoList"></ul>
+            </div>
+        </div>
+
+        <!-- Fenêtre Timer -->
+        <div class="window" id="timerWindow" style="left: 600px; top: 50px; width: 450px;">
+            <div class="window-header">
+                <span class="window-title">[TIMER.EXE] Pomodoro</span>
+                <div class="window-controls">
+                    <div class="window-control close" data-window="timer"></div>
+                </div>
+            </div>
+            <div class="window-content" id="timerContent">
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn" id="timerStart">[START]</button>
+                    <button class="timer-btn" id="timerReset">[RESET]</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fenêtre Éditeur -->
+        <div class="window" id="editorWindow" style="left: 100px; top: 100px; width: 600px; height: 500px;">
+            <div class="window-header">
+                <span class="window-title">[EDIT.EXE] Éditeur de texte</span>
+                <div class="window-controls">
+                    <div class="window-control close" data-window="editor"></div>
+                </div>
+            </div>
+            <div class="window-content">
+                <textarea class="editor-textarea" id="editorText" placeholder="# Commencez à écrire..."></textarea>
+                <div class="editor-status" id="editorStatus">└─ Sauvegarde automatique activée</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestion du menu démarré
+        const startBtn = document.getElementById('startBtn');
+        const startMenu = document.getElementById('startMenu');
+
+        startBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startMenu.classList.toggle('active');
+            startBtn.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            startMenu.classList.remove('active');
+            startBtn.classList.remove('active');
+        });
+
+        startMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Ouverture des applications
+        function openApp(appName) {
+            const windows = {
+                'todo': document.getElementById('todoWindow'),
+                'timer': document.getElementById('timerWindow'),
+                'editor': document.getElementById('editorWindow')
+            };
+
+            if (windows[appName]) {
+                windows[appName].classList.add('active');
+                bringToFront(windows[appName]);
+                startMenu.classList.remove('active');
+                startBtn.classList.remove('active');
+            }
+        }
+
+        // Gestion du z-index pour passer au premier plan
+        function bringToFront(window) {
+            document.querySelectorAll('.window').forEach(w => {
+                w.classList.remove('focused');
+            });
+            window.classList.add('focused');
+        }
+
+        // Clic sur une fenêtre pour la passer au premier plan
+        document.querySelectorAll('.window').forEach(window => {
+            window.addEventListener('mousedown', () => {
+                bringToFront(window);
+            });
+        });
+
+        // Icônes de la barre des tâches
+        document.querySelectorAll('.taskbar-icon').forEach(icon => {
+            icon.addEventListener('click', () => {
+                openApp(icon.dataset.app);
+            });
+        });
+
+        // Items du menu démarré
+        document.querySelectorAll('.start-menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                openApp(item.dataset.app);
+            });
+        });
+
+        // Fermeture des fenêtres
+        document.querySelectorAll('.window-control.close').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const windowId = btn.dataset.window + 'Window';
+                document.getElementById(windowId).classList.remove('active');
+            });
+        });
+
+        // Déplacement des fenêtres
+        document.querySelectorAll('.window-header').forEach(header => {
+            let isDragging = false;
+            let currentX, currentY, initialX, initialY;
+
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('window-control')) return;
+                isDragging = true;
+                const window = header.parentElement;
+                initialX = e.clientX - window.offsetLeft;
+                initialY = e.clientY - window.offsetTop;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const window = header.parentElement;
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                window.style.left = currentX + 'px';
+                window.style.top = currentY + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        });
+
+        // APP TO-DO
+        const todoInput = document.getElementById('todoInput');
+        const todoAddBtn = document.getElementById('todoAddBtn');
+        const todoList = document.getElementById('todoList');
+
+        let todos = JSON.parse(localStorage.getItem('ordoTodos')) || [];
+
+        function saveTodos() {
+            localStorage.setItem('ordoTodos', JSON.stringify(todos));
+        }
+
+        function renderTodos() {
+            todoList.innerHTML = '';
+            todos.forEach((todo, index) => {
+                const li = document.createElement('li');
+                li.className = 'todo-item' + (todo.completed ? ' completed' : '');
+                li.innerHTML = `
+                    <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-index="${index}">
+                    <span class="todo-text">${todo.text}</span>
+                    <button class="todo-delete" data-index="${index}">[X]</button>
+                `;
+                todoList.appendChild(li);
+            });
+        }
+
+        function addTodo() {
+            const text = todoInput.value.trim();
+            if (text) {
+                todos.push({ text, completed: false });
+                saveTodos();
+                renderTodos();
+                todoInput.value = '';
+            }
+        }
+
+        todoAddBtn.addEventListener('click', addTodo);
+        todoInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTodo();
+        });
+
+        todoList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('todo-checkbox')) {
+                const index = e.target.dataset.index;
+                todos[index].completed = e.target.checked;
+                saveTodos();
+                renderTodos();
+            }
+            if (e.target.classList.contains('todo-delete')) {
+                const index = e.target.dataset.index;
+                todos.splice(index, 1);
+                saveTodos();
+                renderTodos();
+            }
+        });
+
+        renderTodos();
+
+        // APP TIMER
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerStart = document.getElementById('timerStart');
+        const timerReset = document.getElementById('timerReset');
+        const timerContent = document.getElementById('timerContent');
+
+        let timerInterval = null;
+        let timeLeft = 25 * 60;
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timeLeft);
+        }
+
+        function startTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                timerStart.textContent = '[START]';
+                timerContent.classList.remove('timer-complete');
+            } else {
+                timerStart.textContent = '[PAUSE]';
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        timerStart.textContent = '[START]';
+                        timerContent.classList.add('timer-complete');
+                        setTimeout(() => {
+                            timerContent.classList.remove('timer-complete');
+                        }, 3000);
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+            timerStart.textContent = '[START]';
+            timerContent.classList.remove('timer-complete');
+        }
+
+        timerStart.addEventListener('click', startTimer);
+        timerReset.addEventListener('click', resetTimer);
+
+        // APP ÉDITEUR
+        const editorText = document.getElementById('editorText');
+        const editorStatus = document.getElementById('editorStatus');
+
+        editorText.value = localStorage.getItem('ordoEditorText') || '';
+
+        let saveTimeout;
+        editorText.addEventListener('input', () => {
+            clearTimeout(saveTimeout);
+            editorStatus.textContent = '└─ Sauvegarde en cours...';
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem('ordoEditorText', editorText.value);
+                editorStatus.textContent = '└─ Sauvegardé [' + new Date().toLocaleTimeString() + ']';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
