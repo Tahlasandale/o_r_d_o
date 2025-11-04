@@ -27,7 +27,7 @@ except ImportError as e:
 # Configuration
 PORT = 8000
 HERE = Path(__file__).parent.absolute()
-INDEX_FILE = HERE / "desktop.html"
+INDEX_FILE = HERE / "index.html"
 
 class LocalServerHandler(http.server.SimpleHTTPRequestHandler):
     """Handler HTTP personnalisé pour servir les fichiers locaux"""
