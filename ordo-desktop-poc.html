@@ -6,15 +6,6 @@
     <title>Ordo Desktop</title>
     <link rel="stylesheet" href="css/poc-styles.css">
     <style>
-        .editor-status {
-            margin-top: 10px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-align: right;
-            padding: 5px;
-            border-top: 1px solid var(--bg-secondary);
-        }
-
         /* Styles spécifiques pour les médias queries */
         @media (max-width: 768px) {
             .window {
@@ -25,12 +16,6 @@
 
             .start-menu {
                 width: 220px;
-            }
-
-            .timer-display {
-                font-size: 48px;
-                letter-spacing: 4px;
-                padding: 20px;
             }
 
             .taskbar-icon {
@@ -50,13 +35,26 @@
             pointer-events: none;
             font-size: 18px;
         }
+
+        .app-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: var(--bg-primary);
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
     <div class="desktop">
         <div class="desktop-area" id="desktopArea">
             <div class="desktop-empty-state">
-                [ORDO DESKTOP v1.0]<br>
+                [ORDO DESKTOP v2.0]<br>
                 └─ Cliquez sur Démarrer pour lancer une application
             </div>
         </div>
@@ -64,140 +62,299 @@
         <!-- Barre des tâches -->
         <div class="taskbar">
             <button class="start-button" id="startBtn">[DÉMARRER]</button>
-            <div class="taskbar-icons">
-                <div class="taskbar-icon" data-app="todo" title="To-Do">📝</div>
-                <div class="taskbar-icon" data-app="timer" title="Timer">⏱️</div>
-                <div class="taskbar-icon" data-app="editor" title="Éditeur">📄</div>
+            <div class="taskbar-icons" id="taskbarIcons">
+                <!-- Les icônes seront ajoutées dynamiquement -->
             </div>
         </div>
 
         <!-- Menu démarré -->
         <div class="start-menu" id="startMenu">
             <div class="start-menu-header">[MENU ORDO]</div>
-            <div class="start-menu-items">
-                <div class="start-menu-item" data-app="todo">
-                    <span class="start-menu-item-icon">📝</span>
-                    <span>Gestionnaire de tâches</span>
-                </div>
-                <div class="start-menu-item" data-app="timer">
-                    <span class="start-menu-item-icon">⏱️</span>
-                    <span>Timer Pomodoro</span>
-                </div>
-                <div class="start-menu-item" data-app="editor">
-                    <span class="start-menu-item-icon">📄</span>
-                    <span>Éditeur de texte</span>
-                </div>
+            <div class="start-menu-items" id="startMenuItems">
+                <!-- Les éléments du menu seront ajoutés dynamiquement -->
             </div>
         </div>
 
-        <!-- Fenêtre To-Do -->
-        <div class="window" id="todoWindow" style="left: 50px; top: 50px; width: 500px;">
-            <div class="window-header">
-                <span class="window-title">[TODO.EXE] Gestionnaire de tâches</span>
-                <div class="window-controls">
-                    <div class="window-control close" data-window="todo"></div>
-                </div>
-            </div>
-            <div class="window-content">
-                <div class="todo-input-group">
-                    <input type="text" class="todo-input" id="todoInput" placeholder="Nouvelle tâche...">
-                    <button class="todo-btn" id="todoAddBtn">[+]</button>
-                </div>
-                <ul class="todo-list" id="todoList"></ul>
-            </div>
-        </div>
-
-        <!-- Fenêtre Timer -->
-        <div class="window" id="timerWindow" style="left: 600px; top: 50px; width: 450px;">
-            <div class="window-header">
-                <span class="window-title">[TIMER.EXE] Pomodoro</span>
-                <div class="window-controls">
-                    <div class="window-control close" data-window="timer"></div>
-                </div>
-            </div>
-            <div class="window-content" id="timerContent">
-                <div class="timer-display" id="timerDisplay">25:00</div>
-                <div class="timer-controls">
-                    <button class="timer-btn" id="timerStart">[START]</button>
-                    <button class="timer-btn" id="timerReset">[RESET]</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Fenêtre Éditeur -->
-        <div class="window" id="editorWindow" style="left: 100px; top: 100px; width: 600px; height: 500px;">
-            <div class="window-header">
-                <span class="window-title">[EDIT.EXE] Éditeur de texte</span>
-                <div class="window-controls">
-                    <div class="window-control close" data-window="editor"></div>
-                </div>
-            </div>
-            <div class="window-content">
-                <textarea class="editor-textarea" id="editorText" placeholder="# Commencez à écrire..."></textarea>
-                <div class="editor-status" id="editorStatus">└─ Sauvegarde automatique activée</div>
-            </div>
-        </div>
+        <!-- Les fenêtres seront ajoutées dynamiquement ici -->
     </div>
 
-    <script>
-        // Gestion du menu démarré
+        <script>
+        // Configuration des applications
+        const APPS = {
+            todo: {
+                id: 'todo',
+                title: 'Gestionnaire de tâches',
+                icon: '📝',
+                width: 500,
+                height: 400,
+                defaultX: 50,
+                defaultY: 50
+            },
+            timer: {
+                id: 'timer',
+                title: 'Timer Pomodoro',
+                icon: '⏱️',
+                width: 450,
+                height: 300,
+                defaultX: 600,
+                defaultY: 50
+            },
+            editor: {
+                id: 'editor',
+                title: 'Éditeur de texte',
+                icon: '📄',
+                width: 600,
+                height: 500,
+                defaultX: 100,
+                defaultY: 100
+            }
+        };
+
+        // Éléments du DOM
+        const desktopArea = document.getElementById('desktopArea');
         const startBtn = document.getElementById('startBtn');
         const startMenu = document.getElementById('startMenu');
+        const startMenuItems = document.getElementById('startMenuItems');
+        const taskbarIcons = document.getElementById('taskbarIcons');
+        const openWindows = new Map();
+        let zIndex = 10;
 
+        // Initialisation du menu et de la barre des tâches
+        function initUI() {
+            // Création des éléments du menu démarré
+            Object.values(APPS).forEach(app => {
+                // Élément du menu démarré
+                const menuItem = document.createElement('div');
+                menuItem.className = 'start-menu-item';
+                menuItem.dataset.app = app.id;
+                menuItem.innerHTML = `
+                    <span class="start-menu-item-icon">${app.icon}</span>
+                    <span>${app.title}</span>
+                `;
+                menuItem.addEventListener('click', () => openApp(app.id));
+                startMenuItems.appendChild(menuItem);
+
+                // Icône de la barre des tâches
+                const taskbarIcon = document.createElement('div');
+                taskbarIcon.className = 'taskbar-icon';
+                taskbarIcon.dataset.app = app.id;
+                taskbarIcon.title = app.title;
+                taskbarIcon.textContent = app.icon;
+                taskbarIcon.addEventListener('click', () => toggleApp(app.id));
+                taskbarIcons.appendChild(taskbarIcon);
+            });
+        }
+
+        // Gestion du menu démarré
+        function toggleStartMenu() {
+            startMenu.classList.toggle('active');
+            
+            // Si on ouvre le menu, on met le focus sur le premier élément
+            if (startMenu.classList.contains('active')) {
+                const firstMenuItem = startMenu.querySelector('.start-menu-item');
+                if (firstMenuItem) firstMenuItem.focus();
+            }
+        }
+
+        // Clic sur le bouton Démarrer
         startBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            startMenu.classList.toggle('active');
-            startBtn.classList.toggle('active');
+            toggleStartMenu();
         });
 
-        document.addEventListener('click', () => {
-            startMenu.classList.remove('active');
-            startBtn.classList.remove('active');
+        // Gestion de la touche Alt
+        let altPressed = false;
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Alt' && !altPressed) {
+                e.preventDefault();
+                altPressed = true;
+                toggleStartMenu();
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'Alt') {
+                altPressed = false;
+            }
+        });
+
+        // Empêcher le comportement par défaut de Alt pour éviter le menu du navigateur
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Alt') {
+                e.preventDefault();
+            }
+        }, true);
+
+        // Fermer le menu quand on clique ailleurs
+        document.addEventListener('click', (e) => {
+            if (startMenu && !startMenu.contains(e.target) && e.target !== startBtn) {
+                startMenu.classList.remove('active');
+            }
         });
 
         startMenu.addEventListener('click', (e) => {
             e.stopPropagation();
         });
 
-        // Ouverture des applications
-        function openApp(appName) {
-            const windows = {
-                'todo': document.getElementById('todoWindow'),
-                'timer': document.getElementById('timerWindow'),
-                'editor': document.getElementById('editorWindow')
-            };
-
-            if (windows[appName]) {
-                windows[appName].classList.add('active');
-                bringToFront(windows[appName]);
-                startMenu.classList.remove('active');
-                startBtn.classList.remove('active');
+        // Gestion des fenêtres
+        function createWindow(appId) {
+            if (openWindows.has(appId)) {
+                return openWindows.get(appId);
             }
-        }
 
-        // Gestion du z-index pour passer au premier plan
-        function bringToFront(window) {
-            document.querySelectorAll('.window').forEach(w => {
-                w.classList.remove('focused');
+            const app = APPS[appId];
+            if (!app) return null;
+
+            const windowId = `${appId}Window`;
+            
+            // Création de la fenêtre
+            const window = document.createElement('div');
+            window.className = 'window active';
+            window.id = windowId;
+            window.style.left = `${app.defaultX}px`;
+            window.style.top = `${app.defaultY}px`;
+            window.style.width = `${app.width}px`;
+            window.style.height = `${app.height}px`;
+            window.style.zIndex = zIndex++;
+
+            // En-tête de la fenêtre
+            const windowHeader = document.createElement('div');
+            windowHeader.className = 'window-header';
+            windowHeader.innerHTML = `
+                <span class="window-title">[${app.title.toUpperCase()}]</span>
+                <div class="window-controls">
+                    <div class="window-control close" data-window="${appId}" title="Fermer"></div>
+                </div>
+            `;
+
+            // Contenu de la fenêtre (iframe)
+            const windowContent = document.createElement('div');
+            windowContent.className = 'window-content app-container';
+            
+            const iframe = document.createElement('iframe');
+            iframe.className = 'app-iframe';
+            iframe.sandbox = 'allow-same-origin allow-scripts allow-forms';
+            iframe.src = `apps/${appId}/index.html`;
+            iframe.dataset.app = appId;
+
+            windowContent.appendChild(iframe);
+            window.appendChild(windowHeader);
+            window.appendChild(windowContent);
+            desktopArea.appendChild(window);
+
+            // Gestion du déplacement des fenêtres
+            makeDraggable(window, windowHeader);
+
+            // Gestion du bouton de fermeture
+            const closeBtn = windowHeader.querySelector('.close');
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeApp(appId);
             });
-            window.classList.add('focused');
-        }
 
-        // Clic sur une fenêtre pour la passer au premier plan
-        document.querySelectorAll('.window').forEach(window => {
+            // Mise au premier plan au clic
             window.addEventListener('mousedown', () => {
                 bringToFront(window);
             });
-        });
 
-        // Icônes de la barre des tâches
-        document.querySelectorAll('.taskbar-icon').forEach(icon => {
-            icon.addEventListener('click', () => {
-                openApp(icon.dataset.app);
-            });
-        });
+            // Mise à jour de l'état
+            openWindows.set(appId, window);
+            updateTaskbarIcon(appId, true);
 
-        // Items du menu démarré
+            return window;
+        }
+
+        function makeDraggable(element, handle) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            
+            handle.onmousedown = dragMouseDown;
+            
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Obtenir la position de la souris au démarrage
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // Appeler une fonction chaque fois que la souris bouge
+                document.onmousemove = elementDrag;
+                
+                // Mettre la fenêtre au premier plan
+                bringToFront(element);
+            }
+            
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Calculer la nouvelle position du curseur
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // Définir la nouvelle position de l'élément
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+            }
+            
+            function closeDragElement() {
+                // Arrêter le déplacement lorsque le bouton de la souris est relâché
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        function bringToFront(windowElement) {
+            windowElement.style.zIndex = zIndex++;
+        }
+
+        function openApp(appId) {
+            const window = createWindow(appId);
+            if (window) {
+                window.classList.add('active');
+                bringToFront(window);
+                
+                // Donner le focus à l'iframe
+                const iframe = window.querySelector('iframe');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage('focus', '*');
+                }
+            }
+            
+            startMenu.classList.remove('active');
+            startBtn.classList.remove('active');
+        }
+
+        function closeApp(appId) {
+            const window = openWindows.get(appId);
+            if (window) {
+                window.classList.remove('active');
+                updateTaskbarIcon(appId, false);
+            }
+        }
+
+        function toggleApp(appId) {
+            const window = openWindows.get(appId);
+            if (window && window.classList.contains('active')) {
+                closeApp(appId);
+            } else {
+                openApp(appId);
+            }
+        }
+
+        function updateTaskbarIcon(appId, isActive) {
+            const icon = document.querySelector(`.taskbar-icon[data-app="${appId}"]`);
+            if (icon) {
+                if (isActive) {
+                    icon.classList.add('active');
+                } else {
+                    icon.classList.remove('active');
+                }
+            }
+        }
+
+        // Initialisation de l'interface
+        initUI();
         document.querySelectorAll('.start-menu-item').forEach(item => {
             item.addEventListener('click', () => {
                 openApp(item.dataset.app);

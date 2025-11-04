@@ -42,14 +42,22 @@ body {
 
 /* Barre des tâches */
 .taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     height: 40px;
     background: var(--bg-secondary);
     border-top: 2px solid var(--border-color);
     display: flex;
     align-items: center;
     padding: 0 10px;
-    gap: 10px;
-    z-index: 1000;
+    gap: 5px;
+    z-index: 1001;
+    /* Assure que la barre des tâches est toujours au-dessus de tout */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
     box-shadow: 0 -2px 4px var(--shadow);
 }
 
@@ -103,15 +111,22 @@ body {
 
 /* Menu démarré */
 .start-menu {
-    position: absolute;
-    bottom: 45px;
+    position: fixed;
+    bottom: 50px;
     left: 10px;
-    width: 280px;
+    width: 250px;
     background: var(--bg-secondary);
     border: 2px solid var(--border-color);
     box-shadow: 4px 4px 0 var(--shadow);
+    z-index: 1000;
     display: none;
-    animation: slideIn 0.2s ease-out;
+    flex-direction: column;
+    max-height: 70vh;
+    overflow-y: auto;
+    /* Assure que le menu est au-dessus de tout */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
 }
 
 .start-menu.active {
@@ -164,20 +179,20 @@ body {
 /* Fenêtres applications */
 .window {
     position: absolute;
-    background: var(--bg-primary);
+    background: var(--bg-secondary);
     border: 2px solid var(--border-color);
     box-shadow: 4px 4px 0 var(--shadow);
-    display: none;
+    min-width: 300px;
+    min-height: 200px;
+    display: flex;
     flex-direction: column;
-    min-width: 400px;
-    min-height: 300px;
+    z-index: 100;
     resize: both;
     overflow: auto;
-    z-index: 1;
-}
-
-.window.focused {
-    z-index: 100;
+    /* Assure que les fenêtres sont en dessous du menu */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
 }
 
 .window.active {

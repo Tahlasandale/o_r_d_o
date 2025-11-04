@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Éditeur de texte</title>
+    <link rel="stylesheet" href="../../css/poc-styles.css">
+    <style>
+        .editor-textarea {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            border: 2px solid var(--border-color);
+            padding: 15px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .editor-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color, #666);
+        }
+
+        .editor-status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+            padding: 5px;
+            border-top: 1px solid var(--bg-secondary);
+        }
+
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <textarea class="editor-textarea" id="editorText" placeholder="Commencez à écrire..."></textarea>
+        <div class="editor-status" id="editorStatus">└─ Sauvegarde automatique activée</div>
+    </div>
+
+    <script>
+        // Récupération des éléments
+        const editorText = document.getElementById('editorText');
+        const editorStatus = document.getElementById('editorStatus');
+        const STORAGE_KEY = 'editorContent';
+        let saveTimeout;
+
+        // Chargement du contenu depuis le stockage local
+        function loadContent() {
+            const savedContent = localStorage.getItem(STORAGE_KEY);
+            if (savedContent) {
+                editorText.value = savedContent;
+                showStatus('Contenu chargé depuis la sauvegarde locale');
+            }
+        }
+
+        // Sauvegarde du contenu dans le stockage local
+        function saveContent() {
+            localStorage.setItem(STORAGE_KEY, editorText.value);
+            showStatus('Sauvegardé à ' + new Date().toLocaleTimeString());
+        }
+
+        // Affichage du statut avec un délai
+        function showStatus(message, duration = 3000) {
+            editorStatus.textContent = `└─ ${message}`;
+            
+            if (duration > 0) {
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => {
+                    editorStatus.textContent = '└─ Prêt';
+                }, duration);
+            }
+        }
+
+        // Gestion des raccourcis clavier
+        function handleKeyDown(e) {
+            // Ctrl+S ou Cmd+S pour sauvegarder
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveContent();
+            }
+        }
+
+        // Événements
+        editorText.addEventListener('input', () => {
+            // Sauvegarde automatique après 2 secondes d'inactivité
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveContent, 2000);
+            showStatus('Modifications non enregistrées...', 2000);
+        });
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Initialisation
+        loadContent();
+        showStatus('Prêt', 0);
+
+        // Communication avec la fenêtre parente
+        window.addEventListener('message', (event) => {
+            if (event.data === 'focus') {
+                editorText.focus();
+            }
+        });
+
+        // Gestion du redimensionnement
+        function adjustHeight() {
+            editorText.style.height = 'auto';
+            editorText.style.height = (editorText.scrollHeight) + 'px';
+        }
+
+        editorText.addEventListener('input', adjustHeight);
+        window.addEventListener('resize', adjustHeight);
+        
+        // Ajustement initial
+        adjustHeight();
+    </script>
+</body>
+</html>
