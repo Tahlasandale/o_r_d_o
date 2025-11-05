@@ -4,9 +4,418 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ordo Desktop</title>
-    <link rel="stylesheet" href="css/poc-styles.css">
     <style>
-        /* Styles spécifiques pour les médias queries */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f0f0f0;
+            --bg-tertiary: #e0e0e0;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --border-color: #000000;
+            --shadow: rgba(0, 0, 0, 0.2);
+            --highlight: #cccccc;
+        }
+
+        body {
+            font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
+            overflow: hidden;
+            height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Desktop */
+        .desktop {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .desktop-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Barre des tâches */
+        .taskbar {
+            height: 40px;
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            gap: 10px;
+            z-index: 1000;
+            box-shadow: 0 -2px 4px var(--shadow);
+        }
+
+        .start-button {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .start-button:hover {
+            background: var(--highlight);
+            box-shadow: 2px 2px 0 var(--shadow);
+        }
+
+        .start-button:active,
+        .start-button.active {
+            background: var(--bg-tertiary);
+            box-shadow: inset 2px 2px 0 var(--shadow);
+        }
+
+        .taskbar-icons {
+            display: flex;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .taskbar-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .taskbar-icon:hover {
+            background: var(--highlight);
+            transform: translateY(-2px);
+            box-shadow: 3px 3px 0 var(--shadow);
+        }
+
+        /* Menu démarré */
+        .start-menu {
+            position: absolute;
+            bottom: 45px;
+            left: 10px;
+            width: 280px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            box-shadow: 4px 4px 0 var(--shadow);
+            display: none;
+            animation: slideIn 0.2s ease-out;
+        }
+
+        .start-menu.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .start-menu-header {
+            background: var(--border-color);
+            color: var(--bg-primary);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .start-menu-items {
+            background: var(--bg-primary);
+        }
+
+        .start-menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--bg-secondary);
+        }
+
+        .start-menu-item:hover {
+            background: var(--highlight);
+        }
+
+        .start-menu-item-icon {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Fenêtres applications */
+        .window {
+            position: absolute;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            box-shadow: 4px 4px 0 var(--shadow);
+            display: none;
+            flex-direction: column;
+            min-width: 400px;
+            min-height: 300px;
+            resize: both;
+            overflow: auto;
+            z-index: 1;
+        }
+
+        .window.focused {
+            z-index: 100;
+        }
+
+        .window.active {
+            display: flex;
+            animation: windowOpen 0.2s ease-out;
+        }
+
+        @keyframes windowOpen {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .window-header {
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--border-color);
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            user-select: none;
+        }
+
+        .window-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .window-control {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .window-control.close:hover {
+            background: var(--border-color);
+        }
+
+        .window-content {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+            background: var(--bg-primary);
+        }
+
+        /* App To-Do */
+        .todo-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .todo-input {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid var(--border-color);
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+        }
+
+        .todo-input:focus {
+            outline: none;
+            background: var(--bg-secondary);
+        }
+
+        .todo-btn {
+            padding: 8px 16px;
+            background: var(--border-color);
+            color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .todo-btn:hover {
+            background: var(--bg-primary);
+            color: var(--border-color);
+            box-shadow: 2px 2px 0 var(--shadow);
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid var(--bg-secondary);
+            margin-bottom: 5px;
+            background: var(--bg-primary);
+        }
+
+        .todo-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .todo-item.completed {
+            opacity: 0.5;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+        }
+
+        .todo-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .todo-delete {
+            background: var(--border-color);
+            color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.2s;
+        }
+
+        .todo-delete:hover {
+            background: var(--bg-primary);
+            color: var(--border-color);
+        }
+
+        /* App Timer */
+        .timer-display {
+            text-align: center;
+            font-size: 64px;
+            font-weight: bold;
+            margin: 40px 0;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 8px;
+            border: 3px solid var(--border-color);
+            padding: 30px;
+            background: var(--bg-secondary);
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .timer-btn {
+            padding: 12px 24px;
+            font-size: 14px;
+            background: var(--border-color);
+            color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .timer-btn:hover {
+            background: var(--bg-primary);
+            color: var(--border-color);
+            box-shadow: 3px 3px 0 var(--shadow);
+        }
+
+        .timer-complete .timer-display {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { 
+                background: var(--bg-secondary);
+                border-color: var(--border-color);
+            }
+            50% { 
+                background: var(--border-color);
+                color: var(--bg-primary);
+            }
+        }
+
+        /* App Éditeur */
+        .editor-textarea {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            border: 2px solid var(--border-color);
+            padding: 15px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            background: var(--bg-primary);
+            line-height: 1.6;
+        }
+
+        .editor-textarea:focus {
+            outline: none;
+            background: var(--bg-secondary);
+        }
+
+        .editor-status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+            padding: 5px;
+            border-top: 1px solid var(--bg-secondary);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .window {
                 min-width: 90%;
@@ -18,6 +427,12 @@
                 width: 220px;
             }
 
+            .timer-display {
+                font-size: 48px;
+                letter-spacing: 4px;
+                padding: 20px;
+            }
+
             .taskbar-icon {
                 width: 28px;
                 height: 28px;
@@ -25,6 +440,7 @@
             }
         }
 
+        /* Scroll indicator pour desktop */
         .desktop-empty-state {
             position: absolute;
             top: 50%;
@@ -35,26 +451,13 @@
             pointer-events: none;
             font-size: 18px;
         }
-
-        .app-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: var(--bg-primary);
-        }
-
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
     </style>
 </head>
 <body>
     <div class="desktop">
         <div class="desktop-area" id="desktopArea">
             <div class="desktop-empty-state">
-                [ORDO DESKTOP v2.0]<br>
+                [ORDO DESKTOP v1.0]<br>
                 └─ Cliquez sur Démarrer pour lancer une application
             </div>
         </div>
@@ -62,299 +465,124 @@
         <!-- Barre des tâches -->
         <div class="taskbar">
             <button class="start-button" id="startBtn">[DÉMARRER]</button>
-            <div class="taskbar-icons" id="taskbarIcons">
-                <!-- Les icônes seront ajoutées dynamiquement -->
+            <div class="taskbar-icons">
+                <div class="taskbar-icon" data-app="todo" title="To-Do">📝</div>
+                <div class="taskbar-icon" data-app="timer" title="Timer">⏱️</div>
+                <div class="taskbar-icon" data-app="editor" title="Éditeur">📄</div>
             </div>
         </div>
 
         <!-- Menu démarré -->
         <div class="start-menu" id="startMenu">
             <div class="start-menu-header">[MENU ORDO]</div>
-            <div class="start-menu-items" id="startMenuItems">
-                <!-- Les éléments du menu seront ajoutés dynamiquement -->
+            <div class="start-menu-items">
+                <div class="start-menu-item" data-app="todo">
+                    <span class="start-menu-item-icon">📝</span>
+                    <span>Gestionnaire de tâches</span>
+                </div>
+                <div class="start-menu-item" data-app="timer">
+                    <span class="start-menu-item-icon">⏱️</span>
+                    <span>Timer Pomodoro</span>
+                </div>
+                <div class="start-menu-item" data-app="editor">
+                    <span class="start-menu-item-icon">📄</span>
+                    <span>Éditeur de texte</span>
+                </div>
             </div>
         </div>
 
-        <!-- Les fenêtres seront ajoutées dynamiquement ici -->
+        <!-- Fenêtre To-Do -->
+        <div class="window" id="todoWindow" style="left: 50px; top: 50px; width: 500px;">
+            <div class="window-header">
+                <span class="window-title">[TODO.EXE] Gestionnaire de tâches</span>
+                <div class="window-controls">
+                    <div class="window-control close" data-window="todo"></div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="todo-input-group">
+                    <input type="text" class="todo-input" id="todoInput" placeholder="Nouvelle tâche...">
+                    <button class="todo-btn" id="todoAddBtn">[+]</button>
+                </div>
+                <ul class="todo-list" id="todoList"></ul>
+            </div>
+        </div>
+
+        <!-- Fenêtre Timer -->
+        <div class="window" id="timerWindow" style="left: 600px; top: 50px; width: 450px;">
+            <div class="window-header">
+                <span class="window-title">[TIMER.EXE] Pomodoro</span>
+                <div class="window-controls">
+                    <div class="window-control close" data-window="timer"></div>
+                </div>
+            </div>
+            <div class="window-content" id="timerContent">
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn" id="timerStart">[START]</button>
+                    <button class="timer-btn" id="timerReset">[RESET]</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fenêtre Éditeur -->
+        <div class="window" id="editorWindow" style="left: 100px; top: 100px; width: 600px; height: 500px;">
+            <div class="window-header">
+                <span class="window-title">[EDIT.EXE] Éditeur de texte</span>
+                <div class="window-controls">
+                    <div class="window-control close" data-window="editor"></div>
+                </div>
+            </div>
+            <div class="window-content">
+                <textarea class="editor-textarea" id="editorText" placeholder="# Commencez à écrire..."></textarea>
+                <div class="editor-status" id="editorStatus">└─ Sauvegarde automatique activée</div>
+            </div>
+        </div>
     </div>
 
-        <script>
-        // Configuration des applications
-        const APPS = {
-            todo: {
-                id: 'todo',
-                title: 'Gestionnaire de tâches',
-                icon: '📝',
-                width: 500,
-                height: 400,
-                defaultX: 50,
-                defaultY: 50
-            },
-            timer: {
-                id: 'timer',
-                title: 'Timer Pomodoro',
-                icon: '⏱️',
-                width: 450,
-                height: 300,
-                defaultX: 600,
-                defaultY: 50
-            },
-            editor: {
-                id: 'editor',
-                title: 'Éditeur de texte',
-                icon: '📄',
-                width: 600,
-                height: 500,
-                defaultX: 100,
-                defaultY: 100
-            }
-        };
-
-        // Éléments du DOM
-        const desktopArea = document.getElementById('desktopArea');
+    <script>
+        // Gestion du menu démarré
         const startBtn = document.getElementById('startBtn');
         const startMenu = document.getElementById('startMenu');
-        const startMenuItems = document.getElementById('startMenuItems');
-        const taskbarIcons = document.getElementById('taskbarIcons');
-        const openWindows = new Map();
-        let zIndex = 10;
 
-        // Initialisation du menu et de la barre des tâches
-        function initUI() {
-            // Création des éléments du menu démarré
-            Object.values(APPS).forEach(app => {
-                // Élément du menu démarré
-                const menuItem = document.createElement('div');
-                menuItem.className = 'start-menu-item';
-                menuItem.dataset.app = app.id;
-                menuItem.innerHTML = `
-                    <span class="start-menu-item-icon">${app.icon}</span>
-                    <span>${app.title}</span>
-                `;
-                menuItem.addEventListener('click', () => openApp(app.id));
-                startMenuItems.appendChild(menuItem);
-
-                // Icône de la barre des tâches
-                const taskbarIcon = document.createElement('div');
-                taskbarIcon.className = 'taskbar-icon';
-                taskbarIcon.dataset.app = app.id;
-                taskbarIcon.title = app.title;
-                taskbarIcon.textContent = app.icon;
-                taskbarIcon.addEventListener('click', () => toggleApp(app.id));
-                taskbarIcons.appendChild(taskbarIcon);
-            });
-        }
-
-        // Gestion du menu démarré
-        function toggleStartMenu() {
-            startMenu.classList.toggle('active');
-            
-            // Si on ouvre le menu, on met le focus sur le premier élément
-            if (startMenu.classList.contains('active')) {
-                const firstMenuItem = startMenu.querySelector('.start-menu-item');
-                if (firstMenuItem) firstMenuItem.focus();
-            }
-        }
-
-        // Clic sur le bouton Démarrer
         startBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            toggleStartMenu();
+            startMenu.classList.toggle('active');
+            startBtn.classList.toggle('active');
         });
 
-        // Gestion de la touche Alt
-        let altPressed = false;
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Alt' && !altPressed) {
-                e.preventDefault();
-                altPressed = true;
-                toggleStartMenu();
-            }
-        });
-
-        document.addEventListener('keyup', (e) => {
-            if (e.key === 'Alt') {
-                altPressed = false;
-            }
-        });
-
-        // Empêcher le comportement par défaut de Alt pour éviter le menu du navigateur
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'Alt') {
-                e.preventDefault();
-            }
-        }, true);
-
-        // Fermer le menu quand on clique ailleurs
-        document.addEventListener('click', (e) => {
-            if (startMenu && !startMenu.contains(e.target) && e.target !== startBtn) {
-                startMenu.classList.remove('active');
-            }
+        document.addEventListener('click', () => {
+            startMenu.classList.remove('active');
+            startBtn.classList.remove('active');
         });
 
         startMenu.addEventListener('click', (e) => {
             e.stopPropagation();
         });
 
-        // Gestion des fenêtres
-        function createWindow(appId) {
-            if (openWindows.has(appId)) {
-                return openWindows.get(appId);
+        // Ouverture des applications
+        function openApp(appName) {
+            const windows = {
+                'todo': document.getElementById('todoWindow'),
+                'timer': document.getElementById('timerWindow'),
+                'editor': document.getElementById('editorWindow')
+            };
+
+            if (windows[appName]) {
+                windows[appName].classList.add('active');
+                startMenu.classList.remove('active');
+                startBtn.classList.remove('active');
             }
+        }
 
-            const app = APPS[appId];
-            if (!app) return null;
-
-            const windowId = `${appId}Window`;
-            
-            // Création de la fenêtre
-            const window = document.createElement('div');
-            window.className = 'window active';
-            window.id = windowId;
-            window.style.left = `${app.defaultX}px`;
-            window.style.top = `${app.defaultY}px`;
-            window.style.width = `${app.width}px`;
-            window.style.height = `${app.height}px`;
-            window.style.zIndex = zIndex++;
-
-            // En-tête de la fenêtre
-            const windowHeader = document.createElement('div');
-            windowHeader.className = 'window-header';
-            windowHeader.innerHTML = `
-                <span class="window-title">[${app.title.toUpperCase()}]</span>
-                <div class="window-controls">
-                    <div class="window-control close" data-window="${appId}" title="Fermer"></div>
-                </div>
-            `;
-
-            // Contenu de la fenêtre (iframe)
-            const windowContent = document.createElement('div');
-            windowContent.className = 'window-content app-container';
-            
-            const iframe = document.createElement('iframe');
-            iframe.className = 'app-iframe';
-            iframe.sandbox = 'allow-same-origin allow-scripts allow-forms';
-            iframe.src = `apps/${appId}/index.html`;
-            iframe.dataset.app = appId;
-
-            windowContent.appendChild(iframe);
-            window.appendChild(windowHeader);
-            window.appendChild(windowContent);
-            desktopArea.appendChild(window);
-
-            // Gestion du déplacement des fenêtres
-            makeDraggable(window, windowHeader);
-
-            // Gestion du bouton de fermeture
-            const closeBtn = windowHeader.querySelector('.close');
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                closeApp(appId);
+        // Icônes de la barre des tâches
+        document.querySelectorAll('.taskbar-icon').forEach(icon => {
+            icon.addEventListener('click', () => {
+                openApp(icon.dataset.app);
             });
+        });
 
-            // Mise au premier plan au clic
-            window.addEventListener('mousedown', () => {
-                bringToFront(window);
-            });
-
-            // Mise à jour de l'état
-            openWindows.set(appId, window);
-            updateTaskbarIcon(appId, true);
-
-            return window;
-        }
-
-        function makeDraggable(element, handle) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            
-            handle.onmousedown = dragMouseDown;
-            
-            function dragMouseDown(e) {
-                e = e || window.event;
-                e.preventDefault();
-                // Obtenir la position de la souris au démarrage
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                // Appeler une fonction chaque fois que la souris bouge
-                document.onmousemove = elementDrag;
-                
-                // Mettre la fenêtre au premier plan
-                bringToFront(element);
-            }
-            
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
-                // Calculer la nouvelle position du curseur
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                // Définir la nouvelle position de l'élément
-                element.style.top = (element.offsetTop - pos2) + "px";
-                element.style.left = (element.offsetLeft - pos1) + "px";
-            }
-            
-            function closeDragElement() {
-                // Arrêter le déplacement lorsque le bouton de la souris est relâché
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
-        }
-
-        function bringToFront(windowElement) {
-            windowElement.style.zIndex = zIndex++;
-        }
-
-        function openApp(appId) {
-            const window = createWindow(appId);
-            if (window) {
-                window.classList.add('active');
-                bringToFront(window);
-                
-                // Donner le focus à l'iframe
-                const iframe = window.querySelector('iframe');
-                if (iframe && iframe.contentWindow) {
-                    iframe.contentWindow.postMessage('focus', '*');
-                }
-            }
-            
-            startMenu.classList.remove('active');
-            startBtn.classList.remove('active');
-        }
-
-        function closeApp(appId) {
-            const window = openWindows.get(appId);
-            if (window) {
-                window.classList.remove('active');
-                updateTaskbarIcon(appId, false);
-            }
-        }
-
-        function toggleApp(appId) {
-            const window = openWindows.get(appId);
-            if (window && window.classList.contains('active')) {
-                closeApp(appId);
-            } else {
-                openApp(appId);
-            }
-        }
-
-        function updateTaskbarIcon(appId, isActive) {
-            const icon = document.querySelector(`.taskbar-icon[data-app="${appId}"]`);
-            if (icon) {
-                if (isActive) {
-                    icon.classList.add('active');
-                } else {
-                    icon.classList.remove('active');
-                }
-            }
-        }
-
-        // Initialisation de l'interface
-        initUI();
+        // Items du menu démarré
         document.querySelectorAll('.start-menu-item').forEach(item => {
             item.addEventListener('click', () => {
                 openApp(item.dataset.app);
