@@ -22,11 +22,6 @@
             --highlight: #cccccc;
         }
 
-        @font-face {
-            font-family: 'Perfect DOS VGA 437';
-            src: local('Courier New'), local('Monaco'), local('Consolas');
-        }
-
         body {
             font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
             background: var(--bg-primary);
@@ -190,6 +185,7 @@
             cursor: pointer;
             transition: all 0.3s;
             animation: fadeIn 2s ease-out;
+            display: inline-block;
         }
 
         .hero-cta:hover {
@@ -224,10 +220,41 @@
             line-height: 1.6;
         }
 
+        /* Feature boxes */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .feature-box {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            padding: 30px;
+        }
+
+        .feature-number {
+            font-size: 48px;
+            font-weight: bold;
+            opacity: 0.2;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .feature-text {
+            line-height: 1.7;
+        }
+
         /* Modules grid */
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin: 30px 0;
         }
@@ -247,18 +274,8 @@
             background: var(--highlight);
         }
 
-        .module-number {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 12px;
-            background: var(--border-color);
-            color: var(--bg-primary);
-            padding: 2px 8px;
-        }
-
         .module-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             margin-bottom: 10px;
         }
@@ -268,57 +285,62 @@
             line-height: 1.5;
         }
 
-        /* Phases timeline */
-        .phases {
-            margin: 30px 0;
+        /* Demo section special styling */
+        .demo-box {
+            background: var(--bg-tertiary);
+            border: 3px solid var(--border-color);
+            padding: 60px 40px;
+            text-align: center;
+            margin: 40px 0;
         }
 
-        .phase {
-            background: var(--bg-primary);
-            border: 2px solid var(--border-color);
-            padding: 20px;
-            margin: 20px 0;
-            position: relative;
-            padding-left: 80px;
+        .demo-box h3 {
+            font-size: 28px;
+            margin: 0 0 20px 0;
         }
 
-        .phase-number {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 32px;
-            font-weight: bold;
-            opacity: 0.3;
+        .demo-box p {
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
         }
 
-        .phase-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
+        .demo-notes {
+            font-size: 14px;
+            margin-top: 20px;
+            opacity: 0.7;
         }
 
-        /* Team roles */
-        .roles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .role-category {
-            background: var(--bg-primary);
-            border: 2px solid var(--border-color);
-            padding: 20px;
-        }
-
-        .role-category h3 {
-            margin-top: 0;
+        /* Philosophy section */
+        .philosophy-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
             font-size: 18px;
-            background: var(--border-color);
-            color: var(--bg-primary);
-            padding: 8px;
-            margin: -20px -20px 15px -20px;
+            line-height: 1.8;
+        }
+
+        /* CTA section */
+        .cta-section {
+            text-align: center;
+        }
+
+        .cta-box {
+            background: var(--bg-primary);
+            border: 3px solid var(--border-color);
+            padding: 60px 40px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-box h2 {
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .cta-box p {
+            margin-bottom: 30px;
+            font-size: 16px;
         }
 
         /* Footer */
@@ -345,44 +367,6 @@
 
         .footer-link:hover {
             border-bottom: 1px solid var(--border-color);
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-primary);
-            border: 3px solid var(--border-color);
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 8px 8px 0 var(--shadow);
-        }
-
-        .modal-close {
-            float: right;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0 8px;
-        }
-
-        .modal-close:hover {
-            background: var(--highlight);
         }
 
         /* Animations */
@@ -422,6 +406,18 @@
             .modules-grid {
                 grid-template-columns: 1fr;
             }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-box {
+                padding: 40px 20px;
+            }
+
+            .cta-box {
+                padding: 40px 20px;
+            }
         }
 
         /* Scroll indicator */
@@ -453,736 +449,208 @@
     <nav class="taskbar">
         <div class="taskbar-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">ORDO</div>
         <div class="taskbar-menu">
-            <a href="#concept" class="taskbar-link">Concept</a>
-            <a href="#structure" class="taskbar-link">Structure</a>
-            <a href="#interface" class="taskbar-link">Interface</a>
+            <a href="#demo" class="taskbar-link">Demo</a>
+            <a href="#pourquoi" class="taskbar-link">Pourquoi</a>
             <a href="#modules" class="taskbar-link">Modules</a>
-            <a href="#poc" class="taskbar-link">Demo</a>
             <a href="#philosophie" class="taskbar-link">Philosophie</a>
-            <a href="#equipe" class="taskbar-link">Équipe</a>
-            <a href="#phases" class="taskbar-link">Phases</a>
         </div>
     </nav>
 
     <div class="container">
-        <!-- Hero Section -->
+        <!-- SECTION 1: HERO (conservée) -->
         <section class="hero">
             <h1 class="hero-title">ORDO</h1>
             <p class="hero-subtitle">L'appareil web pour la productivité ultime</p>
-            <a href="#concept" class="hero-cta">DÉCOUVRIR ORDO</a>
+            <a href="#demo" class="hero-cta">DÉCOUVRIR ORDO</a>
             <div class="scroll-indicator">▼</div>
         </section>
 
-        <!-- Concept général -->
-        <section id="concept" class="section">
+        <!-- SECTION 2: DEMO INTERACTIVE -->
+        <section id="demo" class="section">
             <div class="window">
                 <div class="window-header">
-                    <div class="window-title">Concept général</div>
+                    <div class="window-title">Demo interactive</div>
                     <div class="window-controls">
                         <div class="window-btn"></div>
                         <div class="window-btn"></div>
                         <div class="window-btn"></div>
                     </div>
                 </div>
-                <h2>Le Concept Ordo</h2>
-                <p>Ordo est un appareil web autonome conçu pour offrir une expérience de productivité ultime. Il s'agit d'un système d'exploitation web complet, pensé pour la concentration et l'efficacité.</p>
+                <h2>Essayez Ordo dès maintenant</h2>
                 
-                <h3>Fonctionnement</h3>
-                <ul>
-                    <li><strong>Desktop Web</strong> : Interface complète simulant un système d'exploitation moderne</li>
-                    <li><strong>Containers isolés</strong> : Chaque application fonctionne dans son propre environnement sécurisé</li>
-                    <li><strong>Navigation intuitive</strong> : Menu et icônes pour accéder rapidement aux fonctionnalités</li>
-                    <li><strong>Communication inter-modules</strong> : Les applications peuvent échanger des données de manière transparente</li>
-                    <li><strong>Stockage local</strong> : Toutes les données sont conservées localement pour garantir vie privée et rapidité</li>
-                </ul>
-
-                <h3>Environnement autonome</h3>
-                <p>Ordo fonctionne de manière entièrement autonome, sans dépendance aux services cloud. L'appareil intègre :</p>
-                <ul>
-                    <li>Un système de fichiers local complet</li>
-                    <li>Une base de données embarquée (IndexedDB / SQLite)</li>
-                    <li>Des applications web natives optimisées</li>
-                    <li>Une interface minimaliste en noir et blanc sur écran e-ink</li>
-                </ul>
+                <div class="demo-box">
+                    <h3>Découvrez l'interface Ordo directement dans votre navigateur</h3>
+                    <p>Déplacez les fenêtres, testez les modules, ressentez un environnement pensé pour la concentration.</p>
+                    <a href="ordo-desktop-poc.html" class="hero-cta">Lancer la démo</a>
+                    <div class="demo-notes">
+                        <p>Accessible sur ordinateur et tablette<br>Version prototype simplifiée</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Structure logicielle -->
-        <section id="structure" class="section">
+        <!-- SECTION 3: POURQUOI ORDO -->
+        <section id="pourquoi" class="section">
             <div class="window">
                 <div class="window-header">
-                    <div class="window-title">Structure logicielle</div>
+                    <div class="window-title">Pourquoi Ordo</div>
                     <div class="window-controls">
                         <div class="window-btn"></div>
                         <div class="window-btn"></div>
                         <div class="window-btn"></div>
                     </div>
                 </div>
-                <h2>Architecture technique</h2>
+                <h2>Travailler ne devrait pas être une lutte</h2>
                 
-                <h3>Système hôte</h3>
-                <ul>
-                    <li><strong>OS de base</strong> : Linux léger (Debian, Alpine ou distribution custom)</li>
-                    <li><strong>Navigateur embarqué</strong> : Chromium ou WebKit en mode kiosque</li>
-                    <li><strong>Lancement automatique</strong> : Démarrage direct sur le desktop web au boot</li>
-                    <li><strong>Gestion d'énergie</strong> : Optimisations pour écran e-ink et batterie longue durée</li>
-                </ul>
+                <div class="features-grid">
+                    <div class="feature-box">
+                        <div class="feature-number">01</div>
+                        <div class="feature-title">Pas de distractions</div>
+                        <div class="feature-text">Aucun flux social, aucune notification parasite. Un environnement dédié au travail.</div>
+                    </div>
 
-                <h3>Technologies web</h3>
-                <ul>
-                    <li><strong>Frontend</strong> : HTML5, CSS3, JavaScript ES6+</li>
-                    <li><strong>Framework</strong> : Svelte ou VanillaJS pour performance optimale</li>
-                    <li><strong>Stockage</strong> : IndexedDB pour données structurées, FileSystem API pour fichiers</li>
-                    <li><strong>Communication</strong> : PostMessage API, WebSocket local pour IPC</li>
-                </ul>
+                    <div class="feature-box">
+                        <div class="feature-number">02</div>
+                        <div class="feature-title">Tout au même endroit</div>
+                        <div class="feature-text">Les outils essentiels réunis dans un espace cohérent, simple et fluide.</div>
+                    </div>
 
-                <h3>Extensions et API</h3>
-                <ul>
-                    <li>API de gestion de fenêtres (pseudo-OS)</li>
-                    <li>API de communication inter-applications</li>
-                    <li>API d'accès au système de fichiers local</li>
-                    <li>API de notification et d'état système</li>
-                    <li>Intégration optionnelle ChatGPT via API sécurisée</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Interface et Design -->
-        <section id="interface" class="section">
-            <div class="window">
-                <div class="window-header">
-                    <div class="window-title">Interface et Design</div>
-                    <div class="window-controls">
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
+                    <div class="feature-box">
+                        <div class="feature-number">03</div>
+                        <div class="feature-title">Conçu pour la concentration</div>
+                        <div class="feature-text">Interface monochrome, hiérarchie claire, rythme et calme.</div>
                     </div>
                 </div>
-                <h2>Design et ergonomie</h2>
-                
-                <h3>Desktop Web épuré</h3>
-                <ul>
-                    <li><strong>Barre de tâches</strong> : Accès rapide aux applications favorites et système</li>
-                    <li><strong>Pseudo-fenêtres</strong> : Chaque application s'ouvre dans une fenêtre redimensionnable</li>
-                    <li><strong>Gestionnaire d'applications</strong> : Vue d'ensemble de toutes les apps installées</li>
-                    <li><strong>Notifications discrètes</strong> : Système d'alertes non intrusif</li>
-                </ul>
-
-                <h3>Style rétro-moderne</h3>
-                <p>Ordo s'inspire des interfaces classiques pour créer une expérience nostalgique et efficace :</p>
-                <ul>
-                    <li><strong>Esthétique Windows XP / Macintosh</strong> : Bordures nettes, boutons carrés, hiérarchie visuelle claire</li>
-                    <li><strong>Monochrome noir et blanc</strong> : Optimisé pour écran e-ink, repos visuel, concentration maximale</li>
-                    <li><strong>Typographie bitmap</strong> : Police rétro-pixel pour l'authenticité</li>
-                    <li><strong>Animations subtiles</strong> : Transitions fluides sans surcharge visuelle</li>
-                </ul>
-
-                <h3>Design du boîtier</h3>
-                <ul>
-                    <li>Format compact type tablette ou netbook</li>
-                    <li>Écran e-ink 10-13 pouces haute résolution</li>
-                    <li>Clavier intégré ou détachable selon modèle</li>
-                    <li>Finition minimaliste, matériaux durables</li>
-                </ul>
-
-                <h3>Fluidité et interactions</h3>
-                <ul>
-                    <li>Animations 60fps même sur e-ink</li>
-                    <li>Effets hover et feedback tactile</li>
-                    <li>Gestures touchpad/trackball intégrés</li>
-                    <li>Raccourcis clavier système</li>
-                </ul>
             </div>
         </section>
 
-        <!-- Modules -->
+        <!-- SECTION 4: MODULES -->
         <section id="modules" class="section">
             <div class="window">
                 <div class="window-header">
-                    <div class="window-title">Les 14 modules Ordo</div>
+                    <div class="window-title">Modules</div>
                     <div class="window-controls">
                         <div class="window-btn"></div>
                         <div class="window-btn"></div>
                         <div class="window-btn"></div>
                     </div>
                 </div>
-                <h2>Applications intégrées</h2>
-                <p>Ordo intègre 14 modules soigneusement sélectionnés pour couvrir tous les besoins de productivité :</p>
+                <h2>Vos outils essentiels, réunis</h2>
+                <p>Un ensemble d'applications intégrées, pensées pour travailler, créer et réfléchir.</p>
                 
                 <div class="modules-grid">
                     <div class="module-card">
-                        <div class="module-number">01</div>
                         <div class="module-title">ChatGPT</div>
-                        <div class="module-description">Assistant IA intégré pour répondre à vos questions, générer du contenu et vous assister dans vos tâches.</div>
+                        <div class="module-description">Assistant IA intégré</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">02</div>
                         <div class="module-title">To-do</div>
-                        <div class="module-description">Gestionnaire de tâches complet avec priorités, catégories et suivi d'avancement.</div>
+                        <div class="module-description">Gestionnaire de tâches</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">03</div>
                         <div class="module-title">Timer / Pomodoro</div>
-                        <div class="module-description">Timer classique et technique Pomodoro pour optimiser votre concentration par sessions.</div>
+                        <div class="module-description">Sessions de concentration</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">04</div>
                         <div class="module-title">Smart Timer</div>
-                        <div class="module-description">Timer intelligent qui s'adapte à vos habitudes et suggère des pauses optimales.</div>
+                        <div class="module-description">Rythme intelligent</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">05</div>
-                        <div class="module-title">Markdown innovant</div>
-                        <div class="module-description">Éditeur de texte Markdown avec aperçu en temps réel et fonctionnalités avancées.</div>
+                        <div class="module-title">Éditeur Markdown</div>
+                        <div class="module-description">Écriture claire et structurée</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">06</div>
                         <div class="module-title">Navigateur Ordo</div>
-                        <div class="module-description">Navigateur web minimaliste intégré pour accéder à Internet quand nécessaire.</div>
+                        <div class="module-description">Accès web minimaliste</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">07</div>
                         <div class="module-title">Explorateur de fichiers</div>
-                        <div class="module-description">Gestionnaire de fichiers complet pour organiser vos documents et projets.</div>
+                        <div class="module-description">Organisation locale</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">08</div>
                         <div class="module-title">Daily Feedback</div>
-                        <div class="module-description">Journal quotidien pour noter vos réussites, apprentissages et points d'amélioration.</div>
+                        <div class="module-description">Journal d'amélioration continue</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">09</div>
                         <div class="module-title">Lecteur RSS</div>
-                        <div class="module-description">Agrégateur de flux RSS pour suivre vos sources d'information favorites.</div>
+                        <div class="module-description">Suivi d'information</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">10</div>
                         <div class="module-title">Météo</div>
-                        <div class="module-description">Widget météo simple et épuré affichant les prévisions locales.</div>
+                        <div class="module-description">Informations essentielles</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">11</div>
                         <div class="module-title">Planning</div>
-                        <div class="module-description">Calendrier et agenda pour planifier vos journées, semaines et mois.</div>
+                        <div class="module-description">Gestion du calendrier</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">12</div>
                         <div class="module-title">Toolbox</div>
-                        <div class="module-description">Boîte à outils avec calculatrice, convertisseur, chronomètre et utilitaires divers.</div>
+                        <div class="module-description">Utilitaires essentiels</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">13</div>
                         <div class="module-title">Tableau blanc</div>
-                        <div class="module-description">Espace de dessin et schématisation pour visualiser vos idées.</div>
+                        <div class="module-description">Idéation visuelle</div>
                     </div>
                     
                     <div class="module-card">
-                        <div class="module-number">14</div>
                         <div class="module-title">Missionnaire</div>
-                        <div class="module-description">Module de réflexion et définition d'objectifs à long terme et vision personnelle.</div>
+                        <div class="module-description">Objectifs long terme</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Modules -->
-        <section id="modules" class="section">
-            <div class="window">
-                <div class="window-header">
-                    <div class="window-title">Les 14 modules Ordo</div>
-                    <div class="window-controls">
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                    </div>
-                </div>
-                <h2>Applications intégrées</h2>
-                <p>Ordo intègre 14 modules soigneusement sélectionnés pour couvrir tous les besoins de productivité :</p>
-                
-                <div class="modules-grid">
-                    <div class="module-card">
-                        <div class="module-number">01</div>
-                        <div class="module-title">ChatGPT</div>
-                        <div class="module-description">Assistant IA intégré pour répondre à vos questions, générer du contenu et vous assister dans vos tâches.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">02</div>
-                        <div class="module-title">To-do</div>
-                        <div class="module-description">Gestionnaire de tâches complet avec priorités, catégories et suivi d'avancement.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">03</div>
-                        <div class="module-title">Timer / Pomodoro</div>
-                        <div class="module-description">Timer classique et technique Pomodoro pour optimiser votre concentration par sessions.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">04</div>
-                        <div class="module-title">Smart Timer</div>
-                        <div class="module-description">Timer intelligent qui s'adapte à vos habitudes et suggère des pauses optimales.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">05</div>
-                        <div class="module-title">Markdown innovant</div>
-                        <div class="module-description">Éditeur de texte Markdown avec aperçu en temps réel et fonctionnalités avancées.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">06</div>
-                        <div class="module-title">Navigateur Ordo</div>
-                        <div class="module-description">Navigateur web minimaliste intégré pour accéder à Internet quand nécessaire.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">07</div>
-                        <div class="module-title">Explorateur de fichiers</div>
-                        <div class="module-description">Gestionnaire de fichiers complet pour organiser vos documents et projets.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">08</div>
-                        <div class="module-title">Daily Feedback</div>
-                        <div class="module-description">Journal quotidien pour noter vos réussites, apprentissages et points d'amélioration.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">09</div>
-                        <div class="module-title">Lecteur RSS</div>
-                        <div class="module-description">Agrégateur de flux RSS pour suivre vos sources d'information favorites.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">10</div>
-                        <div class="module-title">Météo</div>
-                        <div class="module-description">Widget météo simple et épuré affichant les prévisions locales.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">11</div>
-                        <div class="module-title">Planning</div>
-                        <div class="module-description">Calendrier et agenda pour planifier vos journées, semaines et mois.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">12</div>
-                        <div class="module-title">Toolbox</div>
-                        <div class="module-description">Boîte à outils avec calculatrice, convertisseur, chronomètre et utilitaires divers.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">13</div>
-                        <div class="module-title">Tableau blanc</div>
-                        <div class="module-description">Espace de dessin et schématisation pour visualiser vos idées.</div>
-                    </div>
-                    
-                    <div class="module-card">
-                        <div class="module-number">14</div>
-                        <div class="module-title">Missionnaire</div>
-                        <div class="module-description">Module de réflexion et définition d'objectifs à long terme et vision personnelle.</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Proof of Concept -->
-        <section id="poc" class="section">
-            <div class="window">
-                <div class="window-header">
-                    <div class="window-title">Proof of Concept</div>
-                    <div class="window-controls">
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                    </div>
-                </div>
-                <h2>Démo interactive</h2>
-                <p>Découvrez Ordo en action avec notre prototype fonctionnel. Cette démo vous permet d'expérimenter l'interface desktop et les interactions avant même le développement final.</p>
-                
-                <div style="margin: 40px 0; text-align: center;">
-                    <div style="background: var(--bg-tertiary); border: 2px solid var(--border-color); padding: 40px; margin: 20px 0;">
-                        <h3 style="margin-top: 0;">Essayez le Desktop Ordo</h3>
-                        <p style="margin-bottom: 30px;">Explorez l'environnement de travail Ordo dans votre navigateur</p>
-                        <a href="ordo-desktop-poc.html" class="hero-cta" style="display: inline-block; text-decoration: none;">
-                            LANCER LA DÉMO
-                        </a>
-                    </div>
-                </div>
-
-                <h3>Ce que vous pouvez tester</h3>
-                <ul>
-                    <li><strong>Desktop Web</strong> : Interface complète avec barre de tâches et gestion de fenêtres</li>
-                    <li><strong>Navigation fluide</strong> : Déplacer, redimensionner et organiser les fenêtres</li>
-                    <li><strong>Modules interactifs</strong> : Tester plusieurs applications intégrées</li>
-                    <li><strong>Design rétro</strong> : Découvrir l'esthétique monochrome inspirée des OS classiques</li>
-                </ul>
-
-                <h3>Version actuelle</h3>
-                <p>Cette démo est un prototype fonctionnel représentant la vision d'Ordo. Certaines fonctionnalités sont simplifiées pour l'expérience web, mais le produit final offrira des performances natives et une intégration hardware complète.</p>
-
-                <div style="background: var(--bg-primary); border: 2px solid var(--border-color); padding: 20px; margin: 30px 0;">
-                    <p style="margin: 0;"><strong>💡 Note :</strong> Pour une expérience optimale, utilisez un écran desktop ou tablette. La démo nécessite un navigateur moderne (Chrome, Firefox, Safari).</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Communication et stockage -->
-        <section id="communication" class="section">
-            <div class="window">
-                <div class="window-header">
-                    <div class="window-title">Communication et stockage</div>
-                    <div class="window-controls">
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                    </div>
-                </div>
-                <h2>Architecture de données</h2>
-                
-                <h3>Structure des fichiers locaux</h3>
-                <ul>
-                    <li><strong>/home/user/documents</strong> : Documents utilisateur (notes, projets)</li>
-                    <li><strong>/home/user/data</strong> : Bases de données des applications</li>
-                    <li><strong>/system/apps</strong> : Applications et modules système</li>
-                    <li><strong>/system/config</strong> : Configuration système et préférences</li>
-                </ul>
-
-                <h3>Bases de données</h3>
-                <ul>
-                    <li><strong>IndexedDB</strong> : Stockage rapide pour données structurées des apps</li>
-                    <li><strong>SQLite</strong> : Base relationnelle pour données complexes (optionnel)</li>
-                    <li><strong>LocalStorage</strong> : Préférences légères et cache</li>
-                </ul>
-
-                <h3>Communication inter-applications</h3>
-                <ul>
-                    <li><strong>PostMessage API</strong> : Échange de messages entre modules</li>
-                    <li><strong>WebSocket local</strong> : Communication en temps réel pour fonctionnalités avancées</li>
-                    <li><strong>Event Bus</strong> : Système centralisé d'événements et notifications</li>
-                    <li><strong>Shared State</strong> : État partagé pour données communes (thème, user, config)</li>
-                </ul>
-
-                <h3>Synchronisation (optionnelle)</h3>
-                <p>Possibilité de synchroniser certaines données via :</p>
-                <ul>
-                    <li>Serveur personnel auto-hébergé</li>
-                    <li>Protocoles P2P locaux</li>
-                    <li>Export/import manuel de backups</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Expérience au démarrage -->
-        <section id="demarrage" class="section">
-            <div class="window">
-                <div class="window-header">
-                    <div class="window-title">Expérience au démarrage</div>
-                    <div class="window-controls">
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                    </div>
-                </div>
-                <h2>Le démarrage d'Ordo</h2>
-                <p>Une expérience soigneusement orchestrée pour vous plonger immédiatement dans votre environnement de travail :</p>
-                
-                <h3>Étape 1 : Allumage</h3>
-                <ul>
-                    <li>Appui sur le bouton power</li>
-                    <li>Écran e-ink s'anime progressivement</li>
-                    <li>Logo Ordo apparaît en fade-in</li>
-                </ul>
-
-                <h3>Étape 2 : Boot système</h3>
-                <ul>
-                    <li>Linux démarre en arrière-plan (< 10 secondes)</li>
-                    <li>Chargement des services essentiels</li>
-                    <li>Animation de démarrage style OS rétro</li>
-                </ul>
-
-                <h3>Étape 3 : Chargement du Desktop</h3>
-                <ul>
-                    <li>Le navigateur en mode kiosque se lance</li>
-                    <li>Desktop web s'affiche avec animation de fondu</li>
-                    <li>Barre de tâches et icônes apparaissent progressivement</li>
-                </ul>
-
-                <h3>Étape 4 : Applications</h3>
-                <ul>
-                    <li>Applications précédemment ouvertes se restaurent (optionnel)</li>
-                    <li>Notifications de rappels importants</li>
-                    <li>État système (batterie, connexion) affiché</li>
-                </ul>
-
-                <h3>Temps total</h3>
-                <p><strong>15-20 secondes</strong> du bouton power à l'interface complètement opérationnelle.</p>
-
-                <h3>Modes de fonctionnement</h3>
-                <ul>
-                    <li><strong>Mode Local</strong> : Toutes les fonctionnalités disponibles sans Internet</li>
-                    <li><strong>Mode Connecté</strong> : Accès aux services en ligne (ChatGPT, RSS, Météo)</li>
-                    <li><strong>Mode Économie</strong> : Rafraîchissement e-ink réduit, performance optimisée</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Philosophie -->
+        <!-- SECTION 5: PHILOSOPHIE -->
         <section id="philosophie" class="section">
             <div class="window">
                 <div class="window-header">
-                    <div class="window-title">Philosophie du projet</div>
+                    <div class="window-title">Philosophie</div>
                     <div class="window-controls">
                         <div class="window-btn"></div>
                         <div class="window-btn"></div>
                         <div class="window-btn"></div>
                     </div>
                 </div>
-                <h2>Notre vision</h2>
+                <h2>La technologie au service du calme</h2>
                 
-                <h3>Environnement web autonome</h3>
-                <p>Ordo repense l'ordinateur moderne en créant un environnement web complet et autonome. Plus besoin de multiples applications dispersées : tout est intégré, cohérent, et pensé pour travailler ensemble.</p>
-
-                <h3>Concentration et productivité</h3>
-                <p>Dans un monde saturé de distractions, Ordo offre un sanctuaire de concentration :</p>
-                <ul>
-                    <li>Interface monochrome reposante pour les yeux</li>
-                    <li>Pas de notifications intrusives ni de sollicitations publicitaires</li>
-                    <li>Environnement isolé favorisant le deep work</li>
-                    <li>Outils pensés pour l'efficacité, pas pour la procrastination</li>
-                </ul>
-
-                <h3>Créativité et réflexion</h3>
-                <p>Ordo n'est pas qu'un outil de productivité mécanique. Il encourage :</p>
-                <ul>
-                    <li>La réflexion profonde avec les modules Missionnaire et Daily Feedback</li>
-                    <li>L'expression créative via le Tableau blanc et l'éditeur Markdown</li>
-                    <li>La planification intentionnelle de vos objectifs et projets</li>
-                    <li>Un rapport sain à la technologie et au travail</li>
-                </ul>
-
-                <h3>Sobriété technologique</h3>
-                <p>Ordo incarne une approche sobre et durable de la technologie :</p>
-                <ul>
-                    <li><strong>Écran e-ink</strong> : Consommation énergétique minimale, repos visuel</li>
-                    <li><strong>Hardware durable</strong> : Conception pour la longévité, réparabilité</li>
-                    <li><strong>Logiciel léger</strong> : Pas de bloatware, performance optimale</li>
-                    <li><strong>Vie privée</strong> : Données locales, pas de tracking, respect total de l'utilisateur</li>
-                </ul>
-
-                <h3>Design rétro-moderne</h3>
-                <p>L'esthétique d'Ordo n'est pas nostalgique par hasard. Elle rappelle une époque où :</p>
-                <ul>
-                    <li>Les ordinateurs étaient des outils, pas des centres de distraction</li>
-                    <li>L'interface était claire, directe, sans fioritures inutiles</li>
-                    <li>La technologie servait l'humain, et non l'inverse</li>
-                    <li>Le minimalisme était synonyme d'élégance et d'efficacité</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Équipe -->
-        <section id="equipe" class="section">
-            <div class="window">
-                <div class="window-header">
-                    <div class="window-title">Équipe et rôles</div>
-                    <div class="window-controls">
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                    </div>
-                </div>
-                <h2>L'équipe Ordo</h2>
-                <p>Le projet Ordo nécessite une équipe pluridisciplinaire pour mener à bien conception, développement et production :</p>
-
-                <div class="roles-grid">
-                    <div class="role-category">
-                        <h3>Conception</h3>
-                        <ul>
-                            <li><strong>Chef de projet</strong> : Coordination générale, vision produit, gestion planning</li>
-                            <li><strong>Product Owner</strong> : Définition fonctionnalités, priorisation, roadmap</li>
-                            <li><strong>Architecte logiciel</strong> : Architecture système, choix techniques, documentation</li>
-                        </ul>
-                    </div>
-
-                    <div class="role-category">
-                        <h3>Développement logiciel</h3>
-                        <ul>
-                            <li><strong>Développeur Frontend</strong> : Interface web, desktop, modules applicatifs</li>
-                            <li><strong>Développeur Backend</strong> : Services système, API, gestion données</li>
-                            <li><strong>Développeur Système</strong> : Linux embarqué, boot, drivers, optimisations</li>
-                            <li><strong>Ingénieur DevOps</strong> : Build system, CI/CD, déploiement, mises à jour</li>
-                        </ul>
-                    </div>
-
-                    <div class="role-category">
-                        <h3>Hardware</h3>
-                        <ul>
-                            <li><strong>Ingénieur Hardware</strong> : Conception électronique, schémas, PCB</li>
-                            <li><strong>Designer industriel</strong> : Design boîtier, ergonomie, matériaux</li>
-                            <li><strong>Ingénieur Intégration</strong> : Assemblage, tests hardware, optimisation thermique/batterie</li>
-                        </ul>
-                    </div>
-
-                    <div class="role-category">
-                        <h3>UX/UI</h3>
-                        <ul>
-                            <li><strong>UX Designer</strong> : Parcours utilisateur, ergonomie, wireframes</li>
-                            <li><strong>UI Designer</strong> : Interface visuelle, design system, iconographie</li>
-                            <li><strong>Motion Designer</strong> : Animations, transitions, micro-interactions</li>
-                        </ul>
-                    </div>
-
-                    <div class="role-category">
-                        <h3>Tests & Qualité</h3>
-                        <ul>
-                            <li><strong>QA Engineer</strong> : Tests fonctionnels, automatisation, validation</li>
-                            <li><strong>Beta Testeurs</strong> : Feedback utilisateurs réels, cas d'usage</li>
-                            <li><strong>Responsable Documentation</strong> : Manuels, guides, support utilisateur</li>
-                        </ul>
-                    </div>
+                <div class="philosophy-content">
+                    <p>Ordo propose une alternative à la surcharge numérique. Un outil qui aide à se concentrer, réfléchir et créer avec intention.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Phases -->
-        <section id="phases" class="section">
-            <div class="window">
-                <div class="window-header">
-                    <div class="window-title">Grandes phases du projet</div>
-                    <div class="window-controls">
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                        <div class="window-btn"></div>
-                    </div>
-                </div>
-                <h2>Roadmap Ordo</h2>
-                <p>Le développement d'Ordo s'articule autour de 5 grandes phases :</p>
-
-                <div class="phases">
-                    <div class="phase">
-                        <div class="phase-number">01</div>
-                        <div class="phase-title">Phase 1 : Développement logiciel & prototype</div>
-                        <ul>
-                            <li>Conception de l'architecture système complète</li>
-                            <li>Développement du desktop web et système de fenêtres</li>
-                            <li>Création des 14 modules applicatifs</li>
-                            <li>Implémentation système de communication inter-apps</li>
-                            <li>Développement API et services de base</li>
-                            <li>Prototype fonctionnel sur ordinateur standard</li>
-                            <li>Tests unitaires et d'intégration</li>
-                        </ul>
-                        <p><strong>Durée estimée : 6-9 mois</strong></p>
-                    </div>
-
-                    <div class="phase">
-                        <div class="phase-number">02</div>
-                        <div class="phase-title">Phase 2 : Prototypage hardware</div>
-                        <ul>
-                            <li>Définition spécifications techniques (CPU, RAM, stockage, écran e-ink)</li>
-                            <li>Sélection composants et fournisseurs</li>
-                            <li>Design industriel du boîtier et ergonomie</li>
-                            <li>Création schémas électroniques et PCB</li>
-                            <li>Fabrication premier prototype hardware</li>
-                            <li>Validation technique et tests de faisabilité</li>
-                        </ul>
-                        <p><strong>Durée estimée : 4-6 mois</strong></p>
-                    </div>
-
-                    <div class="phase">
-                        <div class="phase-number">03</div>
-                        <div class="phase-title">Phase 3 : Intégration hardware</div>
-                        <ul>
-                            <li>Portage du système logiciel sur hardware Ordo</li>
-                            <li>Optimisation pour écran e-ink (rafraîchissement, contraste)</li>
-                            <li>Développement drivers spécifiques (clavier, trackball, boutons)</li>
-                            <li>Optimisation consommation énergétique et gestion batterie</li>
-                            <li>Calibration et fine-tuning des performances</li>
-                            <li>Création image système bootable</li>
-                        </ul>
-                        <p><strong>Durée estimée : 3-4 mois</strong></p>
-                    </div>
-
-                    <div class="phase">
-                        <div class="phase-number">04</div>
-                        <div class="phase-title">Phase 4 : Tests & validation</div>
-                        <ul>
-                            <li>Tests fonctionnels exhaustifs de tous les modules</li>
-                            <li>Tests de performance et stabilité (stress tests, uptime)</li>
-                            <li>Tests d'autonomie batterie en conditions réelles</li>
-                            <li>Programme beta testeurs (20-50 utilisateurs sélectionnés)</li>
-                            <li>Collecte feedback et itérations d'amélioration</li>
-                            <li>Corrections bugs et optimisations finales</li>
-                            <li>Rédaction documentation utilisateur complète</li>
-                        </ul>
-                        <p><strong>Durée estimée : 2-3 mois</strong></p>
-                    </div>
-
-                    <div class="phase">
-                        <div class="phase-number">05</div>
-                        <div class="phase-title">Phase 5 : Pré-production / production pilote</div>
-                        <ul>
-                            <li>Finalisation design et spécifications de production</li>
-                            <li>Sélection partenaires fabrication et assemblage</li>
-                            <li>Série pilote (50-100 unités)</li>
-                            <li>Validation qualité série et processus industriel</li>
-                            <li>Mise en place support client et SAV</li>
-                            <li>Préparation campagne de lancement</li>
-                            <li>Lancement commercial initial (précommandes ou série limitée)</li>
-                        </ul>
-                        <p><strong>Durée estimée : 3-5 mois</strong></p>
-                    </div>
-                </div>
-
-                <div style="margin-top: 40px; padding: 20px; background: var(--bg-tertiary); border: 2px solid var(--border-color);">
-                    <h3>Timeline globale</h3>
-                    <p><strong>Durée totale estimée : 18-27 mois</strong> de la conception initiale au lancement commercial.</p>
-                    <p>Ce planning peut être ajusté selon les ressources disponibles, la complexité technique rencontrée, et les retours des phases de test.</p>
-                </div>
+        <!-- SECTION 6: APPEL À ACTION -->
+        <section id="cta" class="section cta-section">
+            <div class="cta-box">
+                <h2>Rejoignez l'aventure</h2>
+                <p>Inscrivez-vous pour accéder aux annonces, tests privés et précommandes.</p>
+                <a href="#" class="hero-cta">S'inscrire à la liste d'attente</a>
             </div>
         </section>
 
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-links">
-                <a href="#concept" class="footer-link">Concept</a>
-                <a href="#structure" class="footer-link">Structure</a>
-                <a href="#interface" class="footer-link">Interface</a>
+                <a href="#demo" class="footer-link">Demo</a>
+                <a href="#pourquoi" class="footer-link">Pourquoi</a>
                 <a href="#modules" class="footer-link">Modules</a>
-                <a href="#poc" class="footer-link">Demo</a>
                 <a href="#philosophie" class="footer-link">Philosophie</a>
-                <a href="#equipe" class="footer-link">Équipe</a>
-                <a href="#phases" class="footer-link">Phases</a>
             </div>
             <p style="margin-top: 20px; opacity: 0.7;">© 2024 Ordo — L'appareil web pour la productivité ultime</p>
             <p style="margin-top: 10px; font-size: 12px; opacity: 0.5;">Conçu avec passion pour un futur plus concentré</p>
         </footer>
-    </div>
-
-    <!-- Modal (pour extensions futures) -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <div class="window-header">
-                <div class="window-title" id="modal-title">Information</div>
-                <div class="window-controls">
-                    <div class="window-btn" onclick="closeModal()"></div>
-                </div>
-            </div>
-            <div style="padding: 20px;" id="modal-body"></div>
-        </div>
     </div>
 
     <script>
@@ -1248,30 +716,12 @@
             });
         });
 
-        // Fonctions modal (pour extensions futures)
-        function openModal(title, content) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-body').innerHTML = content;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-        }
-
-        // Fermer modal en cliquant à l'extérieur
-        document.getElementById('modal').addEventListener('click', (e) => {
-            if (e.target.id === 'modal') {
-                closeModal();
-            }
-        });
-
         // Animation d'entrée hero
         window.addEventListener('load', () => {
             document.querySelector('.hero').classList.add('visible');
         });
 
-        // Easter egg : Konami code pour afficher message caché
+        // Easter egg : Konami code
         let konamiCode = [];
         const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
         
@@ -1280,7 +730,28 @@
             konamiCode = konamiCode.slice(-10);
             
             if (konamiCode.join(',') === konamiSequence.join(',')) {
-                openModal('Easter Egg', '<p style="text-align: center; font-size: 18px;">🎮 Bienvenue, power user !<br><br>Vous avez découvert le code secret Ordo.<br>La productivité ultime vous attend.</p>');
+                // Créer et afficher modal easter egg
+                const modal = document.createElement('div');
+                modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center;';
+                
+                const content = document.createElement('div');
+                content.style.cssText = 'background: var(--bg-primary); border: 3px solid var(--border-color); padding: 40px; text-align: center; max-width: 500px;';
+                content.innerHTML = `
+                    <div style="font-size: 48px; margin-bottom: 20px;">🎮</div>
+                    <h3 style="margin: 0 0 20px 0; font-size: 24px;">Bienvenue, power user !</h3>
+                    <p style="margin: 0; line-height: 1.6;">Vous avez découvert le code secret Ordo.<br>La productivité ultime vous attend.</p>
+                    <div style="margin-top: 30px; padding: 15px; background: var(--bg-tertiary); border: 2px solid var(--border-color);">
+                        <p style="margin: 0; font-size: 12px; opacity: 0.7;">↑↑↓↓←→←→BA</p>
+                    </div>
+                `;
+                
+                modal.appendChild(content);
+                document.body.appendChild(modal);
+                
+                // Fermer au clic
+                modal.addEventListener('click', () => {
+                    modal.remove();
+                });
             }
         });
     </script>
