@@ -1,0 +1,60 @@
+apps:
+  - id: todo
+    title: Gestionnaire de tâches
+    icon: 📝
+    type: web
+    url: file:///C:/Users/Bison/Documents/dev/html/ordo/apps/todo/index.html
+    width: 500
+    height: 500
+    x: 50
+    y: 50
+
+  - id: timer
+    title: Minuteur
+    icon: ⏱️
+    type: web
+    url: file:///C:/Users/Bison/Documents/dev/html/ordo/apps/timer/index.html
+    width: 400
+    height: 300
+    x: 100
+    y: 100
+
+  - id: editor
+    title: Éditeur
+    icon: 📝
+    type: web
+    url: file:///C:/Users/Bison/Documents/dev/html/ordo/apps/editor/index.html
+    width: 800
+    height: 600
+    x: 150
+    y: 150
+
+  - id: search
+    title: Recherche
+    icon: 🔍
+    type: web
+    url: https://google.com
+    width: 800
+    height: 600
+    x: 200
+    y: 200
+
+  - id: youtube
+    title: YouTube
+    icon: ▶️
+    type: web
+    url: https://www.youtube.com
+    width: 960
+    height: 540
+    x: 240
+    y: 140
+
+  - id: chatgpt
+    title: ChatGPT
+    icon: 🔍
+    type: web
+    url: https://chatgpt.com
+    width: 800
+    height: 600
+    x: 200
+    y: 200

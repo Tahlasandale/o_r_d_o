@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://www.youtube-nocookie.com; img-src 'self' data:; style-src 'self' 'unsafe-inline'; base-uri 'self'">
+    <title>YouTube</title>
+    <style>
+        html, body { height: 100%; margin: 0; background: #000; }
+        .wrap { height: 100%; display: grid; grid-template-rows: auto 1fr; }
+        .controls { padding: 8px; background: #111; color: #eee; font-family: 'Courier New', monospace; display: flex; gap: 8px; align-items: center; }
+        .controls input { flex: 1; padding: 6px 8px; border: 1px solid #444; background: #000; color: #eee; }
+        .controls button { padding: 6px 10px; border: 1px solid #444; background: #333; color: #eee; cursor: pointer; }
+        .controls button:hover { background: #222; }
+        iframe { width: 100%; height: 100%; border: 0; background: #000; }
+    </style>
+    <script>
+        function toVideoId(input) {
+            try {
+                // Accepts full URLs or raw IDs
+                if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+                const u = new URL(input);
+                if (u.hostname.includes('youtube.com')) return u.searchParams.get('v') || '';
+                if (u.hostname.includes('youtu.be')) return u.pathname.split('/').filter(Boolean).pop() || '';
+                return '';
+            } catch { return ''; }
+        }
+        function loadVideo() {
+            const field = document.getElementById('vid');
+            const id = toVideoId(field.value.trim());
+            const frame = document.getElementById('player');
+            if (!id) return;
+            frame.src = `https://www.youtube-nocookie.com/embed/${id}`;
+        }
+        function init() {
+            document.getElementById('load').addEventListener('click', loadVideo);
+            document.getElementById('vid').addEventListener('keypress', e => { if (e.key === 'Enter') loadVideo(); });
+            window.addEventListener('message', e => { if (e.data === 'focus') document.getElementById('vid').focus(); });
+            // Default sample video
+            document.getElementById('player').src = 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ';
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+    </script>
+</head>
+<body>
+    <div class="wrap">
+        <div class="controls">
+            <input id="vid" placeholder="Collez une URL YouTube ou un ID de vidéo (11 caractères)">
+            <button id="load">[CHARGER]</button>
+        </div>
+        <iframe id="player" title="YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+</body>
+</html>
+
+

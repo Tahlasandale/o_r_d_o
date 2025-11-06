@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; connect-src 'self'; form-action 'self'; base-uri 'self'">
+    <title>Timer App</title>
+    <link rel="stylesheet" href="../../css/poc-styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
+
+        .timer-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .timer-display {
+            text-align: center;
+            font-size: 64px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 8px;
+            border: 3px solid var(--border-color);
+            padding: 30px;
+            background: var(--bg-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px auto 0;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .timer-btn {
+            padding: 12px 24px;
+            font-size: 14px;
+            background: var(--border-color);
+            color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+            white-space: nowrap;
+        }
+
+        .timer-btn:hover {
+            background: var(--bg-primary);
+            color: var(--border-color);
+            box-shadow: 3px 3px 0 var(--shadow);
+        }
+
+        .timer-complete {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                background: var(--border-color);
+                color: var(--bg-primary);
+                border-color: var(--accent-color, #ff4444);
+            }
+            50% {
+                background: var(--accent-color, #ff4444);
+                color: var(--bg-primary);
+                border-color: var(--border-color);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .timer-display {
+                font-size: 42px;
+                padding: 15px;
+                margin: 10px 0;
+            }
+            
+            .timer-controls {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 0 10px;
+            }
+            
+            .timer-btn {
+                flex: 1 1 calc(50% - 20px);
+                min-width: 120px;
+                padding: 10px 5px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .timer-display {
+                font-size: 36px;
+                padding: 12px;
+            }
+            
+            .timer-controls {
+                flex-direction: row;
+                gap: 8px;
+            }
+            
+            .timer-btn {
+                min-width: 100px;
+                padding: 8px 4px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-container">
+        <div class="timer-display" id="timerDisplay">25:00</div>
+        <div class="timer-controls">
+            <button class="timer-btn" id="timerStart">[START]</button>
+            <button class="timer-btn" id="timerReset">[RESET]</button>
+        </div>
+    </div>
+
+    <script>
+        // Configuration du minuteur (en secondes)
+        const WORK_TIME = 25 * 60; // 25 minutes
+        const SHORT_BREAK = 5 * 60; // 5 minutes
+        const LONG_BREAK = 15 * 60; // 15 minutes
+        
+        let timeLeft = WORK_TIME;
+        let timerInterval = null;
+        let isRunning = false;
+        let isBreak = false;
+        let pomodoroCount = 0;
+
+        // Éléments du DOM
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerStart = document.getElementById('timerStart');
+        const timerReset = document.getElementById('timerReset');
+        const timerElement = document.querySelector('.timer-display');
+
+        // Formatage du temps (mm:ss)
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Mise à jour de l'affichage
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timeLeft);
+            document.title = `${formatTime(timeLeft)} - ${isBreak ? 'Pause' : 'Travail'} | Pomodoro`;
+        }
+
+        // Démarrage du minuteur
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timerStart.textContent = '[PAUSE]';
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+
+                    // Vérification si le temps est écoulé
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerElement.classList.add('timer-complete');
+                        isRunning = false;
+                        timerStart.disabled = true;
+                        
+                        // Jouer un son de notification
+                        playNotificationSound();
+                        
+                        // Passer à la prochaine période
+                        setTimeout(() => {
+                            if (!isBreak) {
+                                pomodoroCount++;
+                                // Après 4 pomodoros, prendre une longue pause
+                                if (pomodoroCount % 4 === 0) {
+                                    startBreak(LONG_BREAK, 'Longue pause');
+                                } else {
+                                    startBreak(SHORT_BREAK, 'Courte pause');
+                                }
+                            } else {
+                                // Retour au travail
+                                startWork();
+                            }
+                        }, 1000);
+                    }
+                }, 1000);
+            } else {
+                // Mise en pause
+                pauseTimer();
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            timerStart.textContent = '[REPRENDRE]';
+        }
+
+        function startBreak(duration, breakType) {
+            isBreak = true;
+            timeLeft = duration;
+            timerElement.classList.add('timer-complete');
+            timerElement.textContent = breakType;
+            timerStart.disabled = true;
+            
+            // Réactiver le bouton après un court délai
+            setTimeout(() => {
+                timerElement.classList.remove('timer-complete');
+                timerStart.disabled = false;
+                timerStart.textContent = '[DEMARRER LA PAUSE]';
+            }, 2000);
+        }
+
+        function startWork() {
+            isBreak = false;
+            timeLeft = WORK_TIME;
+            timerElement.classList.remove('timer-complete');
+            timerStart.textContent = '[COMMENCER]';
+            updateTimerDisplay();
+        }
+
+        // Réinitialisation du minuteur
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            isBreak = false;
+            timeLeft = WORK_TIME;
+            timerStart.textContent = '[START]';
+            timerStart.disabled = false;
+            timerElement.classList.remove('timer-complete');
+            updateTimerDisplay();
+        }
+
+        // Jouer un son de notification
+        function playNotificationSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {
+                console.log('Erreur de lecture audio:', e);
+            }
+        }
+
+        // Gestionnaires d'événements
+        timerStart.addEventListener('click', startTimer);
+        timerReset.addEventListener('click', resetTimer);
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (isRunning) {
+                    pauseTimer();
+                } else {
+                    startTimer();
+                }
+            } else if (e.code === 'KeyR' && e.ctrlKey) {
+                e.preventDefault();
+                resetTimer();
+            }
+        });
+
+        // Initialisation
+        updateTimerDisplay();
+
+        // Communication avec la fenêtre parente
+        window.addEventListener('message', (event) => {
+            if (event.data === 'focus') {
+                timerStart.focus();
+            }
+        });
+    </script>
+</body>
+</html>
