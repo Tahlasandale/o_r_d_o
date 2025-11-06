@@ -33,16 +33,20 @@ class AppEntry:
 
 @lru_cache(maxsize=1)
 def load_registry() -> Dict[str, AppEntry]:
-    """Charge le registre des applications (avec cache)"""
+    """Charge le registre des applications (avec cache)
+    
+    Les chemins des applications sont résolus dynamiquement par rapport à l'emplacement du projet.
+    """
     registry: Dict[str, AppEntry] = {}
     
     try:
-        # Recherche du fichier apps.yaml
+        # Chemin de base du projet (dossier parent du dossier python)
         base_path = Path(__file__).resolve().parents[2]
+        project_root = base_path.parent  # Dossier parent de python/
         cfg_path = base_path / 'apps.yaml'
         
         if not cfg_path.exists():
-            cfg_path = base_path.parent / 'apps.yaml'
+            cfg_path = project_root / 'apps.yaml'
         
         if not cfg_path.exists():
             print(f"Avertissement: Fichier apps.yaml introuvable dans {base_path}")
@@ -52,12 +56,28 @@ def load_registry() -> Dict[str, AppEntry]:
         
         for app in data.get('apps', []):
             try:
+                # Traitement des URLs
+                url = app.get('url')
+                if url and url.startswith('file://'):
+                    # Si c'est un chemin de fichier local, on le résout par rapport à la racine du projet
+                    rel_path = url.replace('file://', '')
+                    # Nettoyer le chemin (supprimer les / en début si nécessaire)
+                    rel_path = rel_path.lstrip('/')
+                    # Construire le chemin absolu
+                    abs_path = (project_root / rel_path).resolve()
+                    # Vérifier que le fichier existe
+                    if not abs_path.exists():
+                        print(f"Avertissement: Fichier introuvable: {abs_path}")
+                        continue
+                    # Utiliser le chemin absolu avec le préfixe file://
+                    url = f'file:///{abs_path}'.replace('\\', '/')
+                
                 entry = AppEntry(
                     id=app['id'], 
                     title=app['title'], 
                     icon=app.get('icon', '📄'),
                     type=app['type'], 
-                    url=app.get('url'), 
+                    url=url, 
                     class_path=app.get('class'),
                     width=app.get('width', 600), 
                     height=app.get('height', 400),

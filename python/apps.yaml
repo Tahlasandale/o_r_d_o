@@ -3,7 +3,7 @@ apps:
     title: Gestionnaire de tâches
     icon: 📝
     type: web
-    url: file:///C:/Users/Bison/Documents/dev/html/ordo/apps/todo/index.html
+    url: file:///apps/todo/index.html
     width: 500
     height: 500
     x: 50
@@ -13,7 +13,7 @@ apps:
     title: Minuteur
     icon: ⏱️
     type: web
-    url: file:///C:/Users/Bison/Documents/dev/html/ordo/apps/timer/index.html
+    url: file:///apps/timer/index.html
     width: 400
     height: 300
     x: 100
@@ -23,7 +23,7 @@ apps:
     title: Éditeur
     icon: 📝
     type: web
-    url: file:///C:/Users/Bison/Documents/dev/html/ordo/apps/editor/index.html
+    url: file:///apps/editor/index.html
     width: 800
     height: 600
     x: 150
