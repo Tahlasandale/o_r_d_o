@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Politique de confidentialité — Ordo / Leprojet.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f0f0f0;
+            --bg-tertiary: #e0e0e0;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --border-color: #000000;
+            --shadow: rgba(0, 0, 0, 0.2);
+            --highlight: #cccccc;
+        }
+
+        body {
+            font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .taskbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: var(--bg-secondary);
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .taskbar-logo {
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 30px;
+            cursor: pointer;
+        }
+
+        .taskbar-menu {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .taskbar-link {
+            text-decoration: none;
+            color: var(--text-primary);
+            padding: 5px 10px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .taskbar-link:hover {
+            background: var(--highlight);
+            border: 1px solid var(--border-color);
+        }
+
+        .taskbar-link.active {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+        }
+
+        .container {
+            margin-top: 40px;
+        }
+
+        .section {
+            min-height: 100vh;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section:nth-child(even) {
+            background: var(--bg-secondary);
+        }
+
+        .window {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            box-shadow: 4px 4px 0 var(--shadow);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 900px;
+        }
+
+        .window-header {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            padding: 8px 12px;
+            margin: -20px -20px 20px -20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .window-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .taskbar-menu {
+                display: none;
+            }
+            .section {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+    <script>
+        // Simple fade-in animation
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.section').forEach((sect, i) => {
+                setTimeout(() => {
+                    sect.classList.add('visible');
+                }, 300 + 300 * i);
+            });
+        });
+    </script>
+</head>
+<body>
+    <nav class="taskbar">
+        <div class="taskbar-logo">Ordo</div>
+    </nav>
+    <div class="container">
+        <section class="section visible" id="politique">
+            <div class="window">
+                <div class="window-header">
+                    <div class="window-title">Politique de confidentialité</div>
+                </div>
+                <h2>Introduction</h2>
+                <p>Ordo accorde une grande importance à la protection de vos données personnelles. Cette politique de confidentialité décrit comment nous collectons, utilisons et protégeons vos informations lorsque vous utilisez notre site web et vous inscrivez à notre newsletter.</p>
+                <h3>1. Données collectées</h3>
+                <ul>
+                    <li>Nom et prénom</li>
+                    <li>Adresse e-mail</li>
+                    <li>Adresse IP et informations de navigation</li>
+                    <li>Données liées à votre interaction avec la newsletter (clics, ouvertures)</li>
+                </ul>
+                <h3>2. Finalités de la collecte</h3>
+                <ul>
+                    <li>Vous envoyer la newsletter et informations sur Ordo</li>
+                    <li>Gérer les précommandes et inscriptions à des événements</li>
+                    <li>Améliorer le site et les services proposés</li>
+                </ul>
+                <h3>3. Base légale</h3>
+                <p>Le traitement de vos données repose sur votre consentement lorsque vous vous inscrivez à la newsletter et sur l’exécution de nos obligations légales pour la gestion du site.</p>
+                <h3>4. Partage des données</h3>
+                <p>Vos informations ne sont jamais vendues. Elles peuvent être partagées uniquement avec :</p>
+                <ul>
+                    <li>Nos prestataires techniques pour l’envoi des newsletters</li>
+                    <li>Nos partenaires logistiques en cas de précommande</li>
+                </ul>
+                <h3>5. Durée de conservation</h3>
+                <ul>
+                    <li>Pour la newsletter : tant que vous ne vous désinscrivez pas</li>
+                    <li>Pour les autres données : 3 ans après votre dernière interaction</li>
+                </ul>
+                <h3>6. Vos droits</h3>
+                <p>Vous pouvez à tout moment :</p>
+                <ul>
+                    <li>Accéder à vos données</li>
+                    <li>Les rectifier ou les supprimer</li>
+                    <li>Vous opposer au traitement de vos données</li>
+                    <li>Retirer votre consentement à la newsletter</li>
+                </ul>
+                <p>Pour exercer vos droits, contactez-nous à : <a href="mailto:contact@leprojet.com">contact@leprojet.com</a></p>
+                <h3>7. Sécurité</h3>
+                <p>Nous mettons en place des mesures techniques et organisationnelles pour protéger vos données contre toute perte, altération ou accès non autorisé.</p>
+                <h3>8. Cookies</h3>
+                <p>Le site utilise des cookies pour améliorer l’expérience utilisateur. Vous pouvez gérer vos préférences directement depuis votre navigateur.</p>
+            </div>
+        </section>
+    </div>
+    <!-- Footer sera chargé ici par load-footer.js -->
+    <script src="js/load-footer.js"></script>
+</body>
+</html>

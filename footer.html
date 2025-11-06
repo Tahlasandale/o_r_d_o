@@ -1,0 +1,122 @@
+<!-- Footer principal du site Ordo -->
+<footer class="footer">
+    <!-- Section liens rapides -->
+    <div class="footer-section">
+        <h4>Navigation</h4>
+        <div class="footer-links">
+            <a href="index.html" class="footer-link">Accueil</a>
+            <a href="index.html#demo" class="footer-link">Demo</a>
+            <a href="index.html#pourquoi" class="footer-link">Pourquoi</a>
+            <a href="index.html#modules" class="footer-link">Modules</a>
+            <a href="index.html#philosophie" class="footer-link">Philosophie</a>
+            <a href="newsletter.html" class="footer-link">Newsletter</a>
+        </div>
+    </div>
+
+    <!-- Section légale -->
+    <div class="footer-section">
+        <h4>Légal</h4>
+        <div class="footer-links">
+            <a href="confidentialite.html" class="footer-link">Confidentialité</a>
+            <a href="legal.html" class="footer-link">Mentions légales</a>
+            <a href="legal.html#editeur" class="footer-link">Éditeur</a>
+            <a href="legal.html#hebergement" class="footer-link">Hébergement</a>
+        </div>
+    </div>
+
+    <!-- Section contact -->
+    <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email : <a href="mailto:contact@leprojet.com" class="footer-link">contact@leprojet.com</a></p>
+        <div class="footer-social">
+            <!-- Liens réseaux sociaux à ajouter ultérieurement -->
+        </div>
+    </div>
+
+    <!-- Copyright et mentions -->
+    <div class="footer-bottom">
+        <p class="footer-copyright">© 2024-2025 Ordo — Tous droits réservés</p>
+        <p class="footer-credits">Conçu avec passion pour un futur plus concentré</p>
+        <p class="footer-legal">En utilisant ce site, vous acceptez nos <a href="confidentialite.html" class="footer-link">politiques de confidentialité</a> et nos <a href="legal.html" class="footer-link">mentions légales</a>.</p>
+    </div>
+</footer>
+
+<!-- Styles du footer -->
+<style>
+    .footer {
+        background: var(--bg-tertiary, #e0e0e0);
+        border-top: 2px solid var(--border-color, #000);
+        padding: 40px 20px 20px;
+        font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
+    }
+
+    .footer-section {
+        margin-bottom: 30px;
+    }
+
+    .footer h4 {
+        font-size: 16px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .footer-link {
+        color: var(--text-primary, #000);
+        text-decoration: none;
+        font-size: 14px;
+        transition: opacity 0.2s;
+    }
+
+    .footer-link:hover {
+        opacity: 0.7;
+        text-decoration: underline;
+    }
+
+    .footer-bottom {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color, #000);
+        text-align: center;
+    }
+
+    .footer-copyright {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .footer-credits {
+        font-size: 12px;
+        opacity: 0.7;
+        margin-bottom: 15px;
+    }
+
+    .footer-legal {
+        font-size: 11px;
+        opacity: 0.6;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.5;
+    }
+
+    @media (min-width: 768px) {
+        .footer {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 50px 40px 20px;
+        }
+
+        .footer-bottom {
+            grid-column: 1 / -1;
+            margin-top: 20px;
+        }
+    }
+</style>

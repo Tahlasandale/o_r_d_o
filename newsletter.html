@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejoins Ordo - Newsletter</title>
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f0f0f0;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --border-color: #000000;
+            --shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header avec logo */
+        .header {
+            padding: 20px 40px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        /* Container principal */
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .signup-box {
+            max-width: 600px;
+            width: 100%;
+            background: var(--bg-primary);
+            border: 3px solid var(--border-color);
+            padding: 60px 50px;
+            box-shadow: 8px 8px 0 var(--shadow);
+            position: relative;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* Icône décorative */
+        .icon-decoration {
+            position: absolute;
+            top: -30px;
+            right: 30px;
+            font-size: 60px;
+            opacity: 0.1;
+            font-weight: bold;
+        }
+
+        /* Titres */
+        .title {
+            font-size: 36px;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* Formulaire */
+        .form {
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-label .optional {
+            font-weight: normal;
+            opacity: 0.6;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
+            font-size: 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: var(--bg-secondary);
+            box-shadow: 4px 4px 0 var(--shadow);
+        }
+
+        .form-button {
+            width: 100%;
+            padding: 18px;
+            font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-button:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 0 var(--shadow);
+        }
+
+        .form-button:active {
+            transform: translateY(0);
+            box-shadow: 2px 2px 0 var(--shadow);
+        }
+
+        /* Section bénéfices */
+        .benefits {
+            border-top: 2px solid var(--border-color);
+            padding-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .benefits-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .benefits-list {
+            list-style: none;
+        }
+
+        .benefit-item {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .benefit-item:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            font-size: 12px;
+        }
+
+        /* Message de succès */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .success-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 2px solid var(--border-color);
+            padding: 30px 40px;
+            background: var(--bg-secondary);
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .footer-text {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .footer-link:hover {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .signup-box {
+                padding: 40px 30px;
+                box-shadow: 4px 4px 0 var(--shadow);
+            }
+
+            .title {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            .icon-decoration {
+                font-size: 40px;
+                top: -20px;
+                right: 20px;
+            }
+
+            .benefits-title {
+                font-size: 16px;
+            }
+
+            .benefit-item {
+                font-size: 14px;
+            }
+
+            .footer {
+                padding: 20px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <a href="#" class="logo">ORDO</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="signup-box">
+            <div class="icon-decoration">O</div>
+
+            <!-- Message de succès (caché par défaut) -->
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">✓</div>
+                <div class="success-title">Bienvenue dans la liste !</div>
+                <div class="success-text">Tu recevras bientôt ton premier email avec l'accès à la démo.</div>
+            </div>
+
+            <!-- Formulaire -->
+            <div id="formContainer">
+                <h1 class="title">Rejoins ton espace de concentration</h1>
+                <p class="subtitle">Sois le premier à tester Ordo, découvre la démo et reçois nos annonces exclusives.</p>
+
+                <form class="form" id="signupForm">
+                    <div class="form-group">
+                        <label class="form-label" for="firstName">
+                            Prénom <span class="optional">(optionnel)</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="firstName" 
+                            name="firstName" 
+                            class="form-input"
+                            placeholder="Alex"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">
+                            Email <span style="color: #ff0000;">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input"
+                            placeholder="alex@exemple.com"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="form-button">
+                        Je rejoins la liste
+                    </button>
+                </form>
+
+                <!-- Bénéfices -->
+                <div class="benefits">
+                    <div class="benefits-title">Ce que tu reçois :</div>
+                    <ul class="benefits-list">
+                        <li class="benefit-item">Accès immédiat à la démo interactive</li>
+                        <li class="benefit-item">Avant-premières sur les nouveaux modules et fonctionnalités</li>
+                        <li class="benefit-item">Infos exclusives sur les précommandes et lancements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer sera chargé ici par load-footer.js -->
+    <script src="js/load-footer.js"></script>
+
+    <script>
+        // Gestion du formulaire
+        const form = document.getElementById('signupForm');
+        const formContainer = document.getElementById('formContainer');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const firstName = document.getElementById('firstName').value;
+            const email = document.getElementById('email').value;
+
+            // Simulation d'envoi (à remplacer par votre API)
+            console.log('Inscription:', { firstName, email });
+
+            // Afficher le message de succès
+            formContainer.style.display = 'none';
+            successMessage.classList.add('show');
+
+            // Optionnel: Réinitialiser après quelques secondes
+            setTimeout(() => {
+                form.reset();
+                formContainer.style.display = 'block';
+                successMessage.classList.remove('show');
+            }, 5000);
+        });
+
+        // Animation smooth au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
