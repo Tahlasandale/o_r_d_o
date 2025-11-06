@@ -101,23 +101,23 @@ def load_registry() -> Dict[str, AppEntry]:
 class OrdoMainWindow(QMainWindow):
     """Fenêtre principale de l'application Ordo Desktop"""
     
-    # Constantes de style (évite les chaînes magiques)
-    BACKGROUND_COLOR = "#8f8f8f"
-    BORDER_COLOR = "#000000"
-    BORDER_WIDTH = 3
+    # Constantes de style (noir et blanc uniquement)
+    BACKGROUND_COLOR = "#ffffff"  # Blanc pur
+    BORDER_COLOR = "#000000"     # Noir pur
+    BORDER_WIDTH = 1             # Bordure plus fine
     MENU_WIDTH = 300
     MENU_HEIGHT = 400
     
-    # Stylesheet centralisé (chargé une seule fois)
+    # Stylesheet centralisé (noir et blanc uniquement)
     STYLESHEET = """
-        QMainWindow, QWidget {
-            background-color: #8f8f8f;
+        QMainWindow, QWidget, QMainWindow > QWidget {
+            background-color: #ffffff !important;
         }
         
         QStatusBar {
-            background-color: #8f8f8f;
-            border: 3px solid #000000;
-            height: 46px;
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            height: 30px;
             padding: 0;
             spacing: 0;
             margin: 0;
@@ -133,56 +133,54 @@ class OrdoMainWindow(QMainWindow):
         QPushButton#startButton {
             background-color: #000000;
             color: #ffffff;
-            border: 3px solid #000000;
-            padding: 8px 20px 8px 40px;
-            min-width: 150px;
-            min-height: 34px;
-            max-height: 38px;
+            border: 1px solid #000000;
+            padding: 4px 10px 4px 20px;
+            min-width: 120px;
+            min-height: 24px;
+            max-height: 28px;
             text-align: left;
             font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
-            font-size: 11.5pt;
+            font-size: 10pt;
             font-weight: bold;
-            letter-spacing: 0.5px;
             text-transform: uppercase;
-            margin: 4px 0 4px 6px;
+            margin: 2px 0 2px 4px;
         }
         
         QPushButton#startButton:hover {
-            background-color: #333333;
-            border-color: #333333;
+            background-color: #000000;
+            border-color: #000000;
         }
         
         QPushButton#startButton:pressed {
             background-color: #000000;
-            border-color: #ffffff;
+            border-color: #000000;
             color: #ffffff;
         }
         
         QMenu {
             background-color: #ffffff;
-            border: 3px solid #000000;
-            padding: 8px 0;
-            min-width: 280px;
-            max-width: 320px;
-            max-height: 600px;
+            border: 1px solid #000000;
+            padding: 4px 0;
+            min-width: 250px;
+            max-width: 300px;
+            max-height: 500px;
             font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: normal;
             margin: 0;
         }
         
         QMenu::item {
-            padding: 10px 25px 10px 35px;
+            padding: 8px 20px 8px 30px;
             background: transparent;
-            min-height: 28px;
+            min-height: 24px;
             border: none;
             margin: 0;
             text-align: left;
             color: #000000;
             font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: normal;
-            letter-spacing: 0.1px;
         }
         
         QMenu::item:selected {
@@ -190,63 +188,60 @@ class OrdoMainWindow(QMainWindow):
             color: #ffffff;
         }
         
-        QMenu::icon {
-            left: 10px;
-            width: 18px;
-            height: 18px;
-        }
-        
         QMenu::separator {
-            height: 3px;
+            height: 1px;
             background: #000000;
-            margin: 8px 0;
+            margin: 4px 0;
         }
         
         QMenu::item#shutdownItem {
             background: #000000;
             color: #ffffff;
-            padding: 12px 25px 12px 35px;
-            margin: 8px 0 0 0;
-            font-weight: 800;
-            letter-spacing: 1px;
+            padding: 8px 20px 8px 30px;
+            margin: 4px 0 0 0;
+            font-weight: bold;
             text-transform: uppercase;
         }
         
         QMenu::item#shutdownItem:selected {
-            background: #333333;
+            background: #000000;
             color: #ffffff;
         }
         
         QMdiArea {
-            background: #8f8f8f;
-            border: none;
+            background: #ffffff !important;
+            border: none !important;
+            background-color: #ffffff !important;
+        }
+        
+        QWidget {
+            background-color: #ffffff !important;
         }
         
         QMdiSubWindow {
-            background: #ffffff;
-            border: 3px solid #000000;
-            border-radius: 0;
+            background: #ffffff !important;
+            border: 1px solid #000000 !important;
+            border-radius: 0 !important;
         }
         
         QMdiSubWindow::title {
             background: #000000;
             color: #ffffff;
-            padding: 8px;
+            padding: 4px 8px;
             text-align: left;
             font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
         
         QMdiSubWindow::close-button, QMdiSubWindow::max-button {
             background: #000000;
             color: #ffffff;
-            border: 2px solid #000000;
-            width: 20px;
-            height: 20px;
-            margin: 2px;
+            border: 1px solid #000000;
+            width: 16px;
+            height: 16px;
+            margin: 1px;
             padding: 0;
             subcontrol-origin: margin;
             subcontrol-position: right center;
@@ -254,13 +249,13 @@ class OrdoMainWindow(QMainWindow):
         }
         
         QMdiSubWindow::close-button:hover, QMdiSubWindow::max-button:hover {
-            background: #333333;
-            border-color: #333333;
+            background: #000000;
+            border-color: #000000;
         }
         
         QMdiSubWindow::close-button:pressed, QMdiSubWindow::max-button:pressed {
             background: #000000;
-            border-color: #ffffff;
+            border-color: #000000;
         }
     """
     
@@ -473,7 +468,7 @@ class OrdoMainWindow(QMainWindow):
             print(f"Erreur affichage application '{app.id}': {e}")
             
     def _create_start_menu(self) -> None:
-        """Create start menu with application list"""
+        """Create start menu with application list (without icons)"""
         self.start_menu = QMenu(self)
         self.start_menu.setObjectName("startMenu")
         
@@ -486,12 +481,6 @@ class OrdoMainWindow(QMainWindow):
             action = QAction(app.title, self)
             action.setData(app_id)
             action.triggered.connect(lambda checked=False, a=app_id: self.open_app(a))
-            
-            # Ajouter l'icône
-            icon = self._create_app_icon(app)
-            if icon:
-                action.setIcon(icon)
-                
             self.start_menu.addAction(action)
         
         # Bouton d'arrêt
@@ -505,48 +494,70 @@ class OrdoMainWindow(QMainWindow):
         self.start_menu.setMaximumHeight(500)
         
     def _create_app_icon(self, app: AppEntry) -> Optional[QIcon]:
-        """Create icon for application"""
-        if not app.icon or not app.icon.strip():
-            return self.style().standardIcon(QStyle.SP_ComputerIcon)
-            
-        # Essayer de créer une icône emoji
-        if len(app.icon.strip()) <= 3:
-            return self._create_emoji_icon(app.icon)
-        
-        # Essayer de charger depuis un fichier
-        icon_path = Path(__file__).parent.parent.parent / 'apps' / f'{app.id}.png'
-        if icon_path.exists():
-            return QIcon(str(icon_path))
-            
-        return self.style().standardIcon(QStyle.SP_ComputerIcon)
+        """Désactivé - Ne plus afficher d'icônes"""
+        return None
         
     def _create_emoji_icon(self, emoji: str) -> Optional[QIcon]:
         """Create icon from emoji"""
+        if not emoji or not emoji.strip():
+            return None
+            
         try:
-            pixmap = QPixmap(16, 16)
+            # Créer une pixmap plus grande pour un meilleur rendu
+            size = 24  # Taille plus grande pour un meilleur rendu
+            pixmap = QPixmap(size, size)
             pixmap.fill(Qt.transparent)
             
             painter = QPainter(pixmap)
+            painter.setRenderHint(QPainter.TextAntialiasing)
+            painter.setRenderHint(QPainter.SmoothPixmapTransform)
             
-            # Essayer différentes polices emoji
-            for font_family in ["Segoe UI Emoji", "Segoe UI Symbol", "Arial"]:
-                font = QFont(font_family, 12)
+            # Essayer différentes polices emoji avec des tailles adaptées
+            font_families = [
+                "Segoe UI Emoji", 
+                "Apple Color Emoji", 
+                "Noto Color Emoji",
+                "Segoe UI Symbol",
+                "Arial",
+                "DejaVu Sans"
+            ]
+            
+            # Nettoyer l'emoji (prendre seulement le premier caractère si c'est une séquence)
+            clean_emoji = emoji.strip()
+            if len(clean_emoji) > 1 and not any(font in clean_emoji for font in font_families):
+                clean_emoji = clean_emoji[0]
+            
+            found_font = False
+            for font_family in font_families:
+                font = QFont(font_family)
+                font.setPixelSize(size - 4)  # Ajuster la taille selon la pixmap
+                
+                # Vérifier si le caractère est supporté
+                if not QFontMetrics(font).inFont(clean_emoji[0]):
+                    continue
+                    
+                found_font = True
                 painter.setFont(font)
                 fm = QFontMetrics(font)
                 
-                if fm.inFont(emoji[0]):
-                    # Centrer l'emoji
-                    text_width = fm.horizontalAdvance(emoji)
-                    text_height = fm.height()
-                    x = (16 - text_width) // 2
-                    y = (16 - text_height) // 2 + fm.ascent()
-                    
-                    painter.drawText(x, y, emoji)
-                    painter.end()
-                    return QIcon(pixmap)
-                    
-            painter.end()
-        except Exception as e:
-            print(f"Erreur création icône emoji: {e}")
+                # Calculer la position pour centrer l'emoji
+                text_width = fm.horizontalAdvance(clean_emoji)
+                text_height = fm.height()
+                x = (size - text_width) // 2
+                y = (size - text_height) // 2 + fm.ascent()
+                
+                # Dessiner l'emoji
+                painter.drawText(x, y, clean_emoji)
+                break
             
-        return None
+            painter.end()
+            
+            if found_font:
+                # Redimensionner à la taille souhaitée (16x16) avec un lissage
+                return QIcon(pixmap.scaled(16, 16, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+                
+        except Exception as e:
+            print(f"Erreur création icône emoji '{emoji}': {e}")
+            
+        # En cas d'échec, retourner une icône par défaut
+        return self.style().standardIcon(QStyle.SP_ComputerIcon)
